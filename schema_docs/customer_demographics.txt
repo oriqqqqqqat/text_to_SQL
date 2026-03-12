@@ -1,0 +1,17 @@
+Table: customer_demographics
+Description:
+  ตารางอ้างอิงประเภท/กลุ่มลูกค้า (demographic segment)
+  ใช้ร่วมกับ customer_customer_demo เพื่อจัดกลุ่มลูกค้า
+  ในทางปฏิบัติ: ตารางนี้มักถูก JOIN ผ่าน customer_customer_demo เสมอ ไม่ค่อยใช้โดดๆ
+
+Columns:
+  customer_type_id VARCHAR(5) PRIMARY KEY  -- รหัสประเภทลูกค้า
+  customer_desc    TEXT                    -- คำอธิบายประเภทลูกค้า เช่น 'Gold', 'Silver' (ถ้ามี)
+
+Relationships:
+  - customer_type_id ถูกอ้างอิงโดย customer_customer_demo.customer_type_id (one-to-many)
+
+Note:
+  - [CAUTION] ข้อมูลใน Northwind ตารางนี้ว่างเปล่า (ไม่มี rows)
+  - ถ้าต้องการข้อมูล demographic ของลูกค้า ต้อง JOIN 3 ตาราง:
+    customers → customer_customer_demo → customer_demographics

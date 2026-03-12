@@ -1,0 +1,7 @@
+Table:shippers
+Description:
+  ข้อมูลบริษัทขนส่งที่ใช้จัดส่งสินค้าให้ลูกค้า (ใช้เป็น FK ใน orders.ship_via)
+Columns:
+  shipper_id   SMALLINT PRIMARY KEY, -- รหัส shipper (ใช้เป็น FK ใน orders.ship_via)
+  company_name VARCHAR(40) NOT NULL, -- ชื่อบริษัทขนส่ง
+  phone        VARCHAR(24)           -- เบอร์โทรศัพท์บริษัทขนส่ง

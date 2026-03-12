@@ -1,0 +1,18 @@
+Table:orders
+Description:
+  ข้อมูลการสั่งซื้อของลูกค้า 1 order อาจมีหลาย order_details
+Columns:
+  order_id         SMALLINT PRIMARY KEY,                          -- รหัส order
+  customer_id      VARCHAR(5) REFERENCES customers(customer_id), -- FK → customers: ลูกค้าที่สั่ง
+  employee_id      SMALLINT   REFERENCES employees(employee_id), -- FK → employees: พนักงานที่รับ order
+  order_date       DATE,                                          -- วันที่สั่งซื้อ
+  required_date    DATE,                                         -- วันที่ต้องการรับสินค้า
+  shipped_date     DATE,                                          -- วันที่ส่งสินค้าจริง (NULL = ยังไม่ได้ส่ง)
+  ship_via         SMALLINT   REFERENCES shippers(shipper_id),   -- FK → shippers: บริษัทขนส่งที่ใช้
+  freight          REAL,                                          -- ค่าขนส่ง
+  ship_name        VARCHAR(40),                                   -- ชื่อผู้รับปลายทาง
+  ship_address     VARCHAR(60),                                   -- ที่อยู่จัดส่ง
+  ship_city        VARCHAR(15),                                   -- เมืองปลายทาง
+  ship_region      VARCHAR(15),                                   -- ภูมิภาคปลายทาง (ที่อยู่จัดส่ง ไม่ใช่ work region)
+  ship_postal_code VARCHAR(10),                                   -- รหัสไปรษณีย์ปลายทาง
+  ship_country     VARCHAR(15)                                    -- ประเทศปลายทาง
