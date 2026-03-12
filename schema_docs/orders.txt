@@ -1,18 +1,32 @@
-Table:orders
+Table: orders
 Description:
-  ข้อมูลการสั่งซื้อของลูกค้า 1 order อาจมีหลาย order_details
+  ข้อมูลคำสั่งซื้อของลูกค้า หนึ่ง order มีได้หลาย order_details (line items)
+  [IMPORTANT] total revenue ของ order ต้องคำนวณจาก order_details ไม่ใช่จาก orders โดยตรง
+
 Columns:
-  order_id         SMALLINT PRIMARY KEY,                          -- รหัส order
-  customer_id      VARCHAR(5) REFERENCES customers(customer_id), -- FK → customers: ลูกค้าที่สั่ง
-  employee_id      SMALLINT   REFERENCES employees(employee_id), -- FK → employees: พนักงานที่รับ order
-  order_date       DATE,                                          -- วันที่สั่งซื้อ
-  required_date    DATE,                                         -- วันที่ต้องการรับสินค้า
-  shipped_date     DATE,                                          -- วันที่ส่งสินค้าจริง (NULL = ยังไม่ได้ส่ง)
-  ship_via         SMALLINT   REFERENCES shippers(shipper_id),   -- FK → shippers: บริษัทขนส่งที่ใช้
-  freight          REAL,                                          -- ค่าขนส่ง
-  ship_name        VARCHAR(40),                                   -- ชื่อผู้รับปลายทาง
-  ship_address     VARCHAR(60),                                   -- ที่อยู่จัดส่ง
-  ship_city        VARCHAR(15),                                   -- เมืองปลายทาง
-  ship_region      VARCHAR(15),                                   -- ภูมิภาคปลายทาง (ที่อยู่จัดส่ง ไม่ใช่ work region)
-  ship_postal_code VARCHAR(10),                                   -- รหัสไปรษณีย์ปลายทาง
-  ship_country     VARCHAR(15)                                    -- ประเทศปลายทาง
+  order_id         SMALLINT    PRIMARY KEY  -- รหัส order
+  customer_id      VARCHAR(5)               -- FK → customers.customer_id
+  employee_id      SMALLINT                 -- FK → employees.employee_id: พนักงานที่รับ order
+  order_date       DATE                     -- วันที่สั่งซื้อ
+  required_date    DATE                     -- วันกำหนดส่ง
+  shipped_date     DATE                     -- วันที่ส่งจริง (NULL = ยังไม่ได้ส่ง / pending)
+  ship_via         SMALLINT                 -- FK → shippers.shipper_id: บริษัทขนส่ง
+  freight          REAL                     -- ค่าขนส่ง (ไม่รวมใน revenue calculation)
+  ship_name        VARCHAR(40)              -- ชื่อผู้รับปลายทาง [IGNORE]
+  ship_address     VARCHAR(60)              -- ที่อยู่จัดส่ง [IGNORE]
+  ship_city        VARCHAR(15)              -- เมืองปลายทาง
+  ship_region      VARCHAR(15)              -- ภูมิภาคปลายทาง (ที่อยู่จัดส่ง) [CAUTION] ไม่ใช่ work region
+  ship_postal_code VARCHAR(10)              -- รหัสไปรษณีย์ปลายทาง [IGNORE]
+  ship_country     VARCHAR(15)              -- ประเทศปลายทาง
+
+Relationships:
+  - order_id    ถูกอ้างอิงโดย order_details.order_id  (one-to-many)
+  - customer_id → customers.customer_id               (many-to-one)
+  - employee_id → employees.employee_id               (many-to-one)
+  - ship_via    → shippers.shipper_id                 (many-to-one)
+
+Common Queries:
+  - order ที่ยังไม่ได้ส่ง    → WHERE shipped_date IS NULL
+  - order ที่ส่งช้า           → WHERE shipped_date > required_date
+  - revenue ต่อ order         → JOIN order_details และ SUM(unit_price * quantity * (1 - discount))
+  - [CAUTION] freight ไม่ใช่ revenue ของสินค้า เป็นค่าขนส่งแยกต่างหาก

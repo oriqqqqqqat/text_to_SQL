@@ -1,22 +1,37 @@
-Table:employees
+Table: employees
 Description:
-  ข้อมูลพนักงานขาย (sales employee) ที่ติดต่อกับลูกค้าโดยตรง
+  ข้อมูลพนักงานขาย (sales employee) ที่ดูแลและติดต่อลูกค้าโดยตรง
+  มีโครงสร้าง hierarchy ผ่าน reports_to (self-reference)
+  Note: ชื่อเต็มพนักงาน = first_name || ' ' || last_name
+
 Columns:
-  employee_id       SMALLINT PRIMARY KEY,                           -- รหัสพนักงาน
-  last_name         VARCHAR(20) NOT NULL,                           -- นามสกุล
-  first_name        VARCHAR(10) NOT NULL,                           -- ชื่อ
-  title             VARCHAR(30),                                    -- ตำแหน่งงาน เช่น Sales Representative
-  title_of_courtesy VARCHAR(25),                                    -- คำนำหน้า เช่น Mr., Ms., Dr.
-  birth_date        DATE,                                           -- วันเกิด
-  hire_date         DATE,                                           -- วันที่เริ่มงาน
-  address           VARCHAR(60),                                    -- ที่อยู่บ้านพนักงาน
-  city              VARCHAR(15),                                    -- เมืองที่พักอาศัย
-  region            VARCHAR(15),                                    -- ภูมิภาคที่พักอาศัย (บ้านเกิด) ไม่ใช่ work region
-  postal_code       VARCHAR(10),                                    -- รหัสไปรษณีย์บ้านพนักงาน
-  country           VARCHAR(15),                                    -- ประเทศที่พักอาศัย
-  home_phone        VARCHAR(24),                                    -- เบอร์โทรศัพท์บ้าน
-  extension         VARCHAR(4),                                     -- เบอร์ต่อภายใน
-  photo             BYTEA,                                          -- รูปถ่ายพนักงาน
-  notes             TEXT,                                           -- ประวัติย่อพนักงาน
-  reports_to        SMALLINT REFERENCES employees(employee_id),    -- FK → employees (self-ref): รหัส manager โดยตรง
-  photo_path        VARCHAR(255)                                    -- path รูปภาพ
+  employee_id        SMALLINT    PRIMARY KEY  -- รหัสพนักงาน
+  last_name          VARCHAR(20) NOT NULL     -- นามสกุล
+  first_name         VARCHAR(10) NOT NULL     -- ชื่อ
+  title              VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Vice President, Sales', 'Sales Manager'
+  title_of_courtesy  VARCHAR(25)              -- คำนำหน้า เช่น 'Mr.', 'Ms.', 'Mrs.', 'Dr.'
+  birth_date         DATE                     -- วันเกิด
+  hire_date          DATE                     -- วันที่เริ่มงาน
+  address            VARCHAR(60)              -- ที่อยู่บ้าน [IGNORE]
+  city               VARCHAR(15)              -- เมืองที่พักอาศัย [IGNORE]
+  region             VARCHAR(15)              -- ที่อยู่จริง ไม่ใช่ work region [CAUTION] อย่าสับสนกับ territories→region
+  postal_code        VARCHAR(10)              -- รหัสไปรษณีย์ [IGNORE]
+  country            VARCHAR(15)              -- ประเทศที่พักอาศัย
+  home_phone         VARCHAR(24)              -- เบอร์โทรศัพท์บ้าน [IGNORE]
+  extension          VARCHAR(4)               -- เบอร์ต่อภายใน [IGNORE]
+  photo              BYTEA                    -- [IGNORE] binary รูปภาพ
+  notes              TEXT                     -- ประวัติย่อพนักงาน
+  reports_to         SMALLINT                 -- FK → employees.employee_id (self-ref) = manager โดยตรง, NULL = ไม่มี manager (top-level)
+  photo_path         VARCHAR(255)             -- [IGNORE] path รูปภาพ
+
+Relationships:
+  - employee_id ถูกอ้างอิงโดย orders.employee_id           (one-to-many)
+  - employee_id ถูกอ้างอิงโดย employee_territories.employee_id (one-to-many)
+  - reports_to  → employees.employee_id (self-reference: manager hierarchy)
+
+Common Queries:
+  - ชื่อเต็มพนักงาน        → first_name || ' ' || last_name
+  - หา manager ของพนักงาน  → Self JOIN: e JOIN employees m ON e.reports_to = m.employee_id
+  - หา subordinate ทั้งหมด → WHERE reports_to = <employee_id>
+  - work region ที่รับผิดชอบ → JOIN employee_territories → territories → region
+                               (ไม่ใช่ employees.region)

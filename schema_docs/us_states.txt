@@ -1,7 +1,11 @@
-Table:us_states
-Description: ข้อมูลรัฐในสหรัฐอเมริกา
+Table: us_states
+Description:
+  ตารางอ้างอิงรัฐในสหรัฐอเมริกา
+  [CAUTION] ตารางนี้ไม่มี FK เชื่อมกับตารางอื่นเลย
+            ไม่ควรนำมา JOIN กับตารางอื่น เว้นแต่ถามเรื่อง US states โดยตรง
+
 Columns:
-  state_id     SMALLINT PRIMARY KEY, -- รหัสรัฐ (ใช้ standalone ไม่ได้ FK กับตารางอื่น)
-  state_name   VARCHAR(100),         -- ชื่อรัฐ เช่น California
-  state_abbr   VARCHAR(2),           -- ตัวย่อรัฐ เช่น CA
-  state_region VARCHAR(50)           -- ภูมิภาคของรัฐ เช่น West
+  state_id     SMALLINT     PRIMARY KEY  -- รหัสรัฐ
+  state_name   VARCHAR(100)              -- ชื่อรัฐ เช่น 'California', 'New York', 'Texas'
+  state_abbr   VARCHAR(2)                -- ตัวย่อ เช่น 'CA', 'NY', 'TX'
+  state_region VARCHAR(50)               -- ภูมิภาค เช่น 'West', 'East', 'South', 'North'

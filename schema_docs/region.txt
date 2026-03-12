@@ -1,6 +1,13 @@
-Table:region
+Table: region
 Description:
-  ภูมิภาคการทำงาน (work region) เช่น Eastern, Western, Northern, Southern
+  ภูมิภาคการทำงาน (work region) ใช้จัดกลุ่ม territories
+  [CAUTION] ไม่ใช่ region ที่อยู่อาศัยของพนักงาน (employees.region)
+            และไม่ใช่ ship_region ของ orders
+
 Columns:
-  region_id          SMALLINT PRIMARY KEY, -- รหัส work region
-  region_description VARCHAR(60) NOT NULL  -- ชื่อ work region เช่น Eastern, Western, Northern, Southern
+  region_id          SMALLINT    PRIMARY KEY  -- รหัส work region
+  region_description VARCHAR(60) NOT NULL     -- ชื่อ work region: 'Eastern', 'Western', 'Northern', 'Southern'
+
+Relationships:
+  - region_id ถูกอ้างอิงโดย territories.region_id (one-to-many)
+  - เข้าถึงจากพนักงานผ่าน: employees → employee_territories → territories → region

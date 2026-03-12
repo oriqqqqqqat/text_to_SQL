@@ -1,7 +1,13 @@
-Table:shippers
+Table: shippers
 Description:
-  ข้อมูลบริษัทขนส่งที่ใช้จัดส่งสินค้าให้ลูกค้า (ใช้เป็น FK ใน orders.ship_via)
+  ข้อมูลบริษัทขนส่งที่ใช้จัดส่งสินค้าให้ลูกค้า
+  ถูกอ้างอิงผ่าน orders.ship_via (ชื่อ column ต่างจาก shipper_id)
+
 Columns:
-  shipper_id   SMALLINT PRIMARY KEY, -- รหัส shipper (ใช้เป็น FK ใน orders.ship_via)
-  company_name VARCHAR(40) NOT NULL, -- ชื่อบริษัทขนส่ง
-  phone        VARCHAR(24)           -- เบอร์โทรศัพท์บริษัทขนส่ง
+  shipper_id   SMALLINT    PRIMARY KEY  -- รหัส shipper
+  company_name VARCHAR(40) NOT NULL     -- ชื่อบริษัทขนส่ง เช่น 'Federal Shipping', 'Speedy Express', 'United Package'
+  phone        VARCHAR(24)              -- เบอร์โทรศัพท์ [IGNORE]
+
+Relationships:
+  - shipper_id ถูกอ้างอิงโดย orders.ship_via (one-to-many)
+  - [CAUTION] JOIN ด้วย orders.ship_via = shippers.shipper_id ไม่ใช่ orders.shipper_id

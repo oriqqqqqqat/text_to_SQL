@@ -1,15 +1,21 @@
-Table:suppliers
-Description: ข้อมูล supplier ที่จัดหาสินค้าให้กับบริษัท
+Table: suppliers
+Description:
+  ข้อมูล supplier (vendor) ที่จัดหาสินค้าให้ Northwind
+  หนึ่ง supplier จัดหาได้หลาย products
+
 Columns:
-  supplier_id   SMALLINT PRIMARY KEY,  -- รหัส supplier
-  company_name  VARCHAR(40) NOT NULL,  -- ชื่อบริษัท supplier
-  contact_name  VARCHAR(30),           -- ชื่อผู้ติดต่อ
-  contact_title VARCHAR(30),           -- ตำแหน่งผู้ติดต่อ
-  address       VARCHAR(60),           -- ที่อยู่บริษัท supplier
-  city          VARCHAR(15),           -- เมืองที่ตั้งบริษัท supplier
-  region        VARCHAR(15),           -- ภูมิภาคที่ตั้งบริษัท supplier (ที่อยู่จริง ไม่ใช่ work region)
-  postal_code   VARCHAR(10),           -- รหัสไปรษณีย์ supplier
-  country       VARCHAR(15),           -- ประเทศที่ตั้งบริษัท supplier
-  phone         VARCHAR(24),           -- เบอร์โทรศัพท์ supplier
-  fax           VARCHAR(24),           -- เบอร์แฟกซ์ supplier
-  homepage      TEXT                   -- เว็บไซต์ supplier
+  supplier_id   SMALLINT    PRIMARY KEY  -- รหัส supplier
+  company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัท supplier เช่น 'Exotic Liquids', 'Tokyo Traders'
+  contact_name  VARCHAR(30)              -- ชื่อผู้ติดต่อ
+  contact_title VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Owner'
+  address       VARCHAR(60)              -- ที่อยู่ [IGNORE]
+  city          VARCHAR(15)              -- เมืองที่ตั้ง
+  region        VARCHAR(15)              -- ที่อยู่จริง [CAUTION] ไม่ใช่ work region, nullable สำหรับ supplier ในยุโรป
+  postal_code   VARCHAR(10)              -- รหัสไปรษณีย์ [IGNORE]
+  country       VARCHAR(15)              -- ประเทศ เช่น 'UK', 'USA', 'Japan', 'Germany', 'France'
+  phone         VARCHAR(24)              -- เบอร์โทรศัพท์ [IGNORE]
+  fax           VARCHAR(24)              -- เบอร์แฟกซ์ [IGNORE]
+  homepage      TEXT                     -- เว็บไซต์ [IGNORE]
+
+Relationships:
+  - supplier_id ถูกอ้างอิงโดย products.supplier_id (one-to-many)

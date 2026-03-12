@@ -1,15 +1,28 @@
-Table:customers
+Table: customers
 Description:
-  ข้อมูลลูกค้า (customer) ที่สั่งซื้อสินค้า
-cloumn:
-  customer_id   VARCHAR(5) PRIMARY KEY, -- รหัสลูกค้า (5 ตัวอักษร เช่น ALFKI)
-  company_name  VARCHAR(40) NOT NULL,   -- ชื่อบริษัทลูกค้า
-  contact_name  VARCHAR(30),            -- ชื่อผู้ติดต่อ
-  contact_title VARCHAR(30),            -- ตำแหน่งผู้ติดต่อ
-  address       VARCHAR(60),            -- ที่อยู่ลูกค้า
-  city          VARCHAR(15),            -- เมืองที่ตั้ง
-  region        VARCHAR(15),            -- ภูมิภาคที่ตั้ง (ที่อยู่จริง ไม่ใช่ work region)
-  postal_code   VARCHAR(10),            -- รหัสไปรษณีย์
-  country       VARCHAR(15),            -- ประเทศของลูกค้า
-  phone         VARCHAR(24),            -- เบอร์โทรศัพท์
-  fax           VARCHAR(24)             -- เบอร์แฟกซ์
+  ข้อมูลลูกค้า (buyer) ที่สั่งซื้อสินค้าจาก Northwind
+  หนึ่ง customer มีได้หลาย orders
+  Note: ลูกค้าใน Northwind เป็นบริษัท (B2B) ไม่ใช่บุคคล
+        ดังนั้น company_name คือชื่อหลักที่ใช้แสดงผล ไม่ใช่ contact_name
+
+Columns:
+  customer_id   VARCHAR(5)  PRIMARY KEY  -- รหัสลูกค้า 5 ตัวอักษรพิมพ์ใหญ่ เช่น 'ALFKI', 'ANATR', 'ANTON'
+  company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัทลูกค้า เช่น 'Alfreds Futterkiste', 'Around the Horn'
+  contact_name  VARCHAR(30)              -- ชื่อผู้ติดต่อในบริษัท เช่น 'Maria Anders'
+  contact_title VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Owner', 'Marketing Manager'
+  address       VARCHAR(60)              -- ที่อยู่
+  city          VARCHAR(15)              -- เมือง เช่น 'Berlin', 'London', 'Paris'
+  region        VARCHAR(15)              -- ภูมิภาค (nullable — ลูกค้าในยุโรปส่วนใหญ่เป็น NULL)
+  postal_code   VARCHAR(10)              -- รหัสไปรษณีย์
+  country       VARCHAR(15)              -- ประเทศ เช่น 'Germany', 'UK', 'France', 'USA', 'Mexico'
+  phone         VARCHAR(24)              -- เบอร์โทรศัพท์
+  fax           VARCHAR(24)              -- เบอร์แฟกซ์ [IGNORE] ไม่ใช้ใน query ทั่วไป
+
+Relationships:
+  - customer_id ถูกอ้างอิงโดย orders.customer_id (one-to-many)
+  - customer_id ถูกอ้างอิงโดย customer_customer_demo.customer_id (one-to-many)
+
+Common Queries:
+  - ดูยอดสั่งซื้อต่อลูกค้า → JOIN orders ON customers.customer_id = orders.customer_id
+  - กรองตามประเทศ          → WHERE country = 'Germany'
+  - ค้นหาชื่อบริษัท         → WHERE company_name LIKE '%Wilman Kala%'
