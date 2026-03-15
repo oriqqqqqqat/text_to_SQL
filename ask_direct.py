@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY_DIRECT"))
 MODEL_NAME = "models/gemini-2.5-flash"
 
 
@@ -21,7 +21,7 @@ def get_db_connection():
 
 
 def load_schema_text():
-    return Path("schema_docs/all_tables.txt").read_text(encoding="utf-8")
+    return Path("./all_tables_with_relations.txt").read_text(encoding="utf-8")
 
 
 def ask(question):
@@ -74,7 +74,7 @@ Question: {question}
 
 if __name__ == "__main__":
     questions = [
-        "ลูกค้าที่หายไปคือใคร เคยซื้อปี 1996 แต่ปี 1997 ไม่ซื้อเลย"
+        "ขอรายชื่อพนักงานที่ทำงานในเมือง London",
     ]
 
     for q in questions:

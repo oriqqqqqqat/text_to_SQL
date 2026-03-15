@@ -6,7 +6,7 @@ Description:
 Columns:
   shipper_id   SMALLINT    PRIMARY KEY  -- รหัส shipper
   company_name VARCHAR(40) NOT NULL     -- ชื่อบริษัทขนส่ง เช่น 'Federal Shipping', 'Speedy Express', 'United Package'
-  phone        VARCHAR(24)              -- เบอร์โทรศัพท์ [IGNORE]
+  phone        VARCHAR(24)              -- เบอร์โทรศัพท์
 
 Relationships:
   - shipper_id ถูกอ้างอิงโดย orders.ship_via (one-to-many)

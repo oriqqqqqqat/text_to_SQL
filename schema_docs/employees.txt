@@ -12,17 +12,17 @@ Columns:
   title_of_courtesy  VARCHAR(25)              -- คำนำหน้า เช่น 'Mr.', 'Ms.', 'Mrs.', 'Dr.'
   birth_date         DATE                     -- วันเกิด
   hire_date          DATE                     -- วันที่เริ่มงาน
-  address            VARCHAR(60)              -- ที่อยู่บ้าน [IGNORE]
-  city               VARCHAR(15)              -- เมืองที่พักอาศัย [IGNORE]
+  address            VARCHAR(60)              -- ที่อยู่บ้าน
+  city               VARCHAR(15)              -- เมืองที่พักอาศัย
   region             VARCHAR(15)              -- ที่อยู่จริง ไม่ใช่ work region [CAUTION] อย่าสับสนกับ territories→region
-  postal_code        VARCHAR(10)              -- รหัสไปรษณีย์ [IGNORE]
+  postal_code        VARCHAR(10)              -- รหัสไปรษณีย์
   country            VARCHAR(15)              -- ประเทศที่พักอาศัย
-  home_phone         VARCHAR(24)              -- เบอร์โทรศัพท์บ้าน [IGNORE]
-  extension          VARCHAR(4)               -- เบอร์ต่อภายใน [IGNORE]
-  photo              BYTEA                    -- [IGNORE] binary รูปภาพ
+  home_phone         VARCHAR(24)              -- เบอร์โทรศัพท์บ้าน
+  extension          VARCHAR(4)               -- เบอร์ต่อภายใน
+  photo              BYTEA                    -- binary รูปภาพ
   notes              TEXT                     -- ประวัติย่อพนักงาน
   reports_to         SMALLINT                 -- FK → employees.employee_id (self-ref) = manager โดยตรง, NULL = ไม่มี manager (top-level)
-  photo_path         VARCHAR(255)             -- [IGNORE] path รูปภาพ
+  photo_path         VARCHAR(255)             -- path รูปภาพ
 
 Relationships:
   - employee_id ถูกอ้างอิงโดย orders.employee_id           (one-to-many)

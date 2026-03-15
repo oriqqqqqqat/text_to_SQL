@@ -9,7 +9,7 @@ Columns:
   product_name      VARCHAR(40) NOT NULL     -- ชื่อสินค้า เช่น 'Chai', 'Chang', 'Aniseed Syrup'
   supplier_id       SMALLINT                 -- FK → suppliers.supplier_id
   category_id       SMALLINT                 -- FK → categories.category_id
-  quantity_per_unit VARCHAR(20)              -- หน่วยบรรจุ เช่น '10 boxes x 20 bags', '24 - 12 oz bottles' [IGNORE]
+  quantity_per_unit VARCHAR(20)              -- หน่วยบรรจุ เช่น '10 boxes x 20 bags', '24 - 12 oz bottles'
   unit_price        REAL                     -- ราคาปัจจุบัน [CAUTION] ไม่ใช่ราคา ณ วันที่สั่ง ดู order_details.unit_price
   units_in_stock    SMALLINT                 -- จำนวนสินค้าคงคลังปัจจุบัน
   units_on_order    SMALLINT                 -- จำนวนที่กำลังสั่งซื้อเพิ่มจาก supplier

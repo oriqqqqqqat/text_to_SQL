@@ -1,0 +1,317 @@
+Table: categories
+Description: หมวดหมู่สินค้า ใช้จัดกลุ่ม products หนึ่ง category มีได้หลาย products
+
+Columns:
+  category_id   INTEGER PRIMARY KEY   -- รหัส category
+  category_name VARCHAR(15) NOT NULL  -- ชื่อหมวด เช่น 'Beverages', 'Seafood', 'Dairy Products', 'Condiments'
+  description   TEXT                  -- คำอธิบายหมวดหมู่
+  picture       BYTEA                 -- binary รูปภาพ
+
+Relationships:
+  - category_id ถูกอ้างอิงโดย products.category_id (one-to-many)
+
+Common Queries:
+  - JOIN products ON categories.category_id = products.category_id
+
+Table: customer_customer_demo
+Description:
+  Junction table เชื่อมลูกค้า (customers) กับประเภทลูกค้า (customer_demographics)
+  ใช้เมื่อต้องการรู้ว่าลูกค้าอยู่ใน demographic segment ไหนบ้าง
+  ในทางปฏิบัติ: ตารางนี้มักใช้เป็นตัวกลาง ไม่ค่อย query โดดๆ
+                ส่วนใหญ่ JOIN พร้อมกับ customers และ customer_demographics เสมอ
+
+Columns:
+  customer_id      VARCHAR(5) NOT NULL  -- FK → customers.customer_id
+  customer_type_id VARCHAR(5) NOT NULL  -- FK → customer_demographics.customer_type_id
+  PRIMARY KEY (customer_id, customer_type_id)
+
+Relationships:
+  - customer_id      → customers.customer_id             (many-to-one)
+  - customer_type_id → customer_demographics.customer_type_id (many-to-one)
+
+Note:
+  - [CAUTION] ข้อมูลใน Northwind ตารางนี้ว่างเปล่า (ไม่มี rows) อาจให้ผลลัพธ์เป็น 0 เสมอ
+
+Table: customer_demographics
+Description:
+  ตารางอ้างอิงประเภท/กลุ่มลูกค้า (demographic segment)
+  ใช้ร่วมกับ customer_customer_demo เพื่อจัดกลุ่มลูกค้า
+  ในทางปฏิบัติ: ตารางนี้มักถูก JOIN ผ่าน customer_customer_demo เสมอ ไม่ค่อยใช้โดดๆ
+
+Columns:
+  customer_type_id VARCHAR(5) PRIMARY KEY  -- รหัสประเภทลูกค้า
+  customer_desc    TEXT                    -- คำอธิบายประเภทลูกค้า
+
+Relationships:
+  - customer_type_id ถูกอ้างอิงโดย customer_customer_demo.customer_type_id (one-to-many)
+
+Note:
+  - [CAUTION] ข้อมูลใน Northwind ตารางนี้ว่างเปล่า (ไม่มี rows)
+  - ถ้าต้องการข้อมูล demographic ของลูกค้า ต้อง JOIN 3 ตาราง:
+    customers → customer_customer_demo → customer_demographics
+
+Table: customers
+Description:
+  ข้อมูลลูกค้า (buyer) ที่สั่งซื้อสินค้าจาก Northwind
+  หนึ่ง customer มีได้หลาย orders
+  Note: ลูกค้าใน Northwind เป็นบริษัท (B2B) ไม่ใช่บุคคล
+        ดังนั้น company_name คือชื่อหลักที่ใช้แสดงผล ไม่ใช่ contact_name
+
+Columns:
+  customer_id   VARCHAR(5)  PRIMARY KEY  -- รหัสลูกค้า 5 ตัวอักษรพิมพ์ใหญ่ เช่น 'ALFKI', 'ANATR', 'ANTON'
+  company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัทลูกค้า เช่น 'Alfreds Futterkiste', 'Around the Horn'
+  contact_name  VARCHAR(30)              -- ชื่อผู้ติดต่อในบริษัท เช่น 'Maria Anders'
+  contact_title VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Owner', 'Marketing Manager'
+  address       VARCHAR(60)              -- ที่อยู่
+  city          VARCHAR(15)              -- เมือง เช่น 'Berlin', 'London', 'Paris'
+  region        VARCHAR(15)              -- ภูมิภาค (nullable — ลูกค้าในยุโรปส่วนใหญ่เป็น NULL)
+  postal_code   VARCHAR(10)              -- รหัสไปรษณีย์
+  country       VARCHAR(15)              -- ประเทศ เช่น 'Germany', 'UK', 'France', 'USA', 'Mexico'
+  phone         VARCHAR(24)              -- เบอร์โทรศัพท์
+  fax           VARCHAR(24)              -- เบอร์แฟกซ์
+
+Relationships:
+  - customer_id ถูกอ้างอิงโดย orders.customer_id (one-to-many)
+  - customer_id ถูกอ้างอิงโดย customer_customer_demo.customer_id (one-to-many)
+
+Common Queries:
+  - ดูยอดสั่งซื้อต่อลูกค้า → JOIN orders ON customers.customer_id = orders.customer_id
+  - กรองตามประเทศ          → WHERE country = 'Germany'
+  - ค้นหาชื่อบริษัท         → WHERE company_name LIKE '%Wilman Kala%'
+
+Table: employee_territories
+Description:
+  Junction table เชื่อมพนักงานกับ territory ที่รับผิดชอบ (many-to-many)
+  ใช้ตารางนี้เมื่อถามเกี่ยวกับ territory/region ที่พนักงานดูแล
+  Note: ตารางนี้ไม่มี column อื่นนอกจาก FK ทั้งสอง ไม่มีข้อมูลเพิ่มเติมเช่น วันที่รับผิดชอบ
+
+Columns:
+  employee_id  SMALLINT    NOT NULL  -- FK → employees.employee_id
+  territory_id VARCHAR(20) NOT NULL  -- FK → territories.territory_id
+  PRIMARY KEY (employee_id, territory_id)
+
+Relationships:
+  - employee_id  → employees.employee_id       (many-to-one)
+  - territory_id → territories.territory_id    (many-to-one)
+
+Common Queries:
+  - หา region ที่พนักงานรับผิดชอบ → JOIN 3 ตาราง:
+    employees → employee_territories → territories → region
+  - [CAUTION] ถ้าถามเรื่อง "region" ต้องแยกให้ออกว่าหมายถึง
+    - work region  → ใช้ employee_territories → territories → region
+    - ที่อยู่จริง  → ใช้ employees.region (column ตรงๆ)
+
+Table: employees
+Description:
+  ข้อมูลพนักงานขาย (sales employee) ที่ดูแลและติดต่อลูกค้าโดยตรง
+  มีโครงสร้าง hierarchy ผ่าน reports_to (self-reference)
+  Note: ชื่อเต็มพนักงาน = first_name || ' ' || last_name
+
+Columns:
+  employee_id        SMALLINT    PRIMARY KEY  -- รหัสพนักงาน
+  last_name          VARCHAR(20) NOT NULL     -- นามสกุล
+  first_name         VARCHAR(10) NOT NULL     -- ชื่อ
+  title              VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Vice President, Sales', 'Sales Manager'
+  title_of_courtesy  VARCHAR(25)              -- คำนำหน้า เช่น 'Mr.', 'Ms.', 'Mrs.', 'Dr.'
+  birth_date         DATE                     -- วันเกิด
+  hire_date          DATE                     -- วันที่เริ่มงาน
+  address            VARCHAR(60)              -- ที่อยู่บ้าน
+  city               VARCHAR(15)              -- เมืองที่พักอาศัย
+  region             VARCHAR(15)              -- ที่อยู่จริง ไม่ใช่ work region [CAUTION] อย่าสับสนกับ territories→region
+  postal_code        VARCHAR(10)              -- รหัสไปรษณีย์
+  country            VARCHAR(15)              -- ประเทศที่พักอาศัย
+  home_phone         VARCHAR(24)              -- เบอร์โทรศัพท์บ้าน
+  extension          VARCHAR(4)               -- เบอร์ต่อภายใน
+  photo              BYTEA                    -- binary รูปภาพ
+  notes              TEXT                     -- ประวัติย่อพนักงาน
+  reports_to         SMALLINT                 -- FK → employees.employee_id (self-ref) = manager โดยตรง, NULL = ไม่มี manager (top-level)
+  photo_path         VARCHAR(255)             -- path รูปภาพ
+
+Relationships:
+  - employee_id ถูกอ้างอิงโดย orders.employee_id           (one-to-many)
+  - employee_id ถูกอ้างอิงโดย employee_territories.employee_id (one-to-many)
+  - reports_to  → employees.employee_id (self-reference: manager hierarchy)
+
+Common Queries:
+  - ชื่อเต็มพนักงาน        → first_name || ' ' || last_name
+  - หา manager ของพนักงาน  → Self JOIN: e JOIN employees m ON e.reports_to = m.employee_id
+  - หา subordinate ทั้งหมด → WHERE reports_to = <employee_id>
+  - work region ที่รับผิดชอบ → JOIN employee_territories → territories → region
+                               (ไม่ใช่ employees.region)
+
+Table: order_details
+Description:
+  รายการสินค้าแต่ละชิ้นภายใน order (line items)
+  หนึ่ง order มีได้หลาย order_details
+  [IMPORTANT] revenue ที่แท้จริง = unit_price * quantity * (1 - discount)
+
+Columns:
+  order_id   SMALLINT NOT NULL  -- FK → orders.order_id
+  product_id SMALLINT NOT NULL  -- FK → products.product_id
+  unit_price REAL     NOT NULL  -- ราคาต่อหน่วย ณ วันที่สั่ง [CAUTION] อาจต่างจาก products.unit_price ในปัจจุบัน
+  quantity   SMALLINT NOT NULL  -- จำนวนที่สั่ง
+  discount   REAL     NOT NULL  -- ส่วนลด 0.0–1.0 (เช่น 0.05 = 5%, 0.0 = ไม่มีส่วนลด)
+  PRIMARY KEY (order_id, product_id)
+
+Relationships:
+  - order_id   → orders.order_id      (many-to-one)
+  - product_id → products.product_id  (many-to-one)
+
+Common Queries:
+  - revenue ต่อ line item  → unit_price * quantity * (1 - discount)
+  - revenue ต่อ order      → SUM(unit_price * quantity * (1 - discount)) GROUP BY order_id
+  - revenue ทั้งหมด        → SUM(unit_price * quantity * (1 - discount))
+  - [CAUTION] อย่าใช้ products.unit_price คำนวณ revenue เพราะราคาอาจเปลี่ยนแล้ว
+
+Table: orders
+Description:
+  ข้อมูลคำสั่งซื้อของลูกค้า หนึ่ง order มีได้หลาย order_details (line items)
+  [IMPORTANT] total revenue ของ order ต้องคำนวณจาก order_details ไม่ใช่จาก orders โดยตรง
+
+Columns:
+  order_id         SMALLINT    PRIMARY KEY  -- รหัส order
+  customer_id      VARCHAR(5)               -- FK → customers.customer_id
+  employee_id      SMALLINT                 -- FK → employees.employee_id: พนักงานที่รับ order
+  order_date       DATE                     -- วันที่สั่งซื้อ
+  required_date    DATE                     -- วันกำหนดส่ง
+  shipped_date     DATE                     -- วันที่ส่งจริง (NULL = ยังไม่ได้ส่ง / pending)
+  ship_via         SMALLINT                 -- FK → shippers.shipper_id: บริษัทขนส่ง
+  freight          REAL                     -- ค่าขนส่ง (ไม่รวมใน revenue calculation)
+  ship_name        VARCHAR(40)              -- ชื่อผู้รับปลายทาง
+  ship_address     VARCHAR(60)              -- ที่อยู่จัดส่ง
+  ship_city        VARCHAR(15)              -- เมืองปลายทาง
+  ship_region      VARCHAR(15)              -- ภูมิภาคปลายทาง (ที่อยู่จัดส่ง) [CAUTION] ไม่ใช่ work region
+  ship_postal_code VARCHAR(10)              -- รหัสไปรษณีย์ปลายทาง
+  ship_country     VARCHAR(15)              -- ประเทศปลายทาง
+
+Relationships:
+  - order_id    ถูกอ้างอิงโดย order_details.order_id  (one-to-many)
+  - customer_id → customers.customer_id               (many-to-one)
+  - employee_id → employees.employee_id               (many-to-one)
+  - ship_via    → shippers.shipper_id                 (many-to-one)
+
+Common Queries:
+  - order ที่ยังไม่ได้ส่ง    → WHERE shipped_date IS NULL
+  - order ที่ส่งช้า           → WHERE shipped_date > required_date
+  - revenue ต่อ order         → JOIN order_details และ SUM(unit_price * quantity * (1 - discount))
+  - [CAUTION] freight ไม่ใช่ revenue ของสินค้า เป็นค่าขนส่งแยกต่างหาก
+
+Table: products
+Description:
+  ข้อมูลสินค้าที่จำหน่ายโดย Northwind
+  [CAUTION] unit_price ในตารางนี้คือราคาปัจจุบัน
+             ถ้าต้องการราคา ณ วันที่สั่งซื้อจริง ต้องใช้ order_details.unit_price แทน
+
+Columns:
+  product_id        SMALLINT    PRIMARY KEY  -- รหัสสินค้า
+  product_name      VARCHAR(40) NOT NULL     -- ชื่อสินค้า เช่น 'Chai', 'Chang', 'Aniseed Syrup'
+  supplier_id       SMALLINT                 -- FK → suppliers.supplier_id
+  category_id       SMALLINT                 -- FK → categories.category_id
+  quantity_per_unit VARCHAR(20)              -- หน่วยบรรจุ เช่น '10 boxes x 20 bags', '24 - 12 oz bottles'
+  unit_price        REAL                     -- ราคาปัจจุบัน [CAUTION] ไม่ใช่ราคา ณ วันที่สั่ง ดู order_details.unit_price
+  units_in_stock    SMALLINT                 -- จำนวนสินค้าคงคลังปัจจุบัน
+  units_on_order    SMALLINT                 -- จำนวนที่กำลังสั่งซื้อเพิ่มจาก supplier
+  reorder_level     SMALLINT                 -- จำนวนขั้นต่ำที่ trigger การสั่งซื้อเพิ่ม
+  discontinued      INTEGER     NOT NULL     -- 0 = ยังจำหน่าย, 1 = หยุดจำหน่ายแล้ว
+
+Relationships:
+  - product_id ถูกอ้างอิงโดย order_details.product_id  (one-to-many)
+  - supplier_id → suppliers.supplier_id                 (many-to-one)
+  - category_id → categories.category_id               (many-to-one)
+
+Common Queries:
+  - สินค้าที่ยังจำหน่าย        → WHERE discontinued = 0
+  - สินค้าที่หยุดจำหน่าย       → WHERE discontinued = 1
+  - สินค้าที่ต้องสั่งซื้อเพิ่ม  → WHERE units_in_stock < reorder_level
+  - สินค้าหมด                  → WHERE units_in_stock = 0 AND discontinued = 0
+
+Table: region
+Description:
+  ภูมิภาคการทำงาน (work region) ใช้จัดกลุ่ม territories
+  [CAUTION] ไม่ใช่ region ที่อยู่อาศัยของพนักงาน (employees.region)
+            และไม่ใช่ ship_region ของ orders
+
+Columns:
+  region_id          SMALLINT    PRIMARY KEY  -- รหัส work region
+  region_description VARCHAR(60) NOT NULL     -- ชื่อ work region: 'Eastern', 'Western', 'Northern', 'Southern'
+
+Relationships:
+  - region_id ถูกอ้างอิงโดย territories.region_id (one-to-many)
+  - เข้าถึงจากพนักงานผ่าน: employees → employee_territories → territories → region
+
+Table: region
+Description:
+  ภูมิภาคการทำงาน (work region) ใช้จัดกลุ่ม territories
+  [CAUTION] ไม่ใช่ region ที่อยู่อาศัยของพนักงาน (employees.region)
+            และไม่ใช่ ship_region ของ orders
+
+Columns:
+  region_id          SMALLINT    PRIMARY KEY  -- รหัส work region
+  region_description VARCHAR(60) NOT NULL     -- ชื่อ work region: 'Eastern', 'Western', 'Northern', 'Southern'
+
+Relationships:
+  - region_id ถูกอ้างอิงโดย territories.region_id (one-to-many)
+  - เข้าถึงจากพนักงานผ่าน: employees → employee_territories → territories → region
+
+Table: shippers
+Description:
+  ข้อมูลบริษัทขนส่งที่ใช้จัดส่งสินค้าให้ลูกค้า
+  ถูกอ้างอิงผ่าน orders.ship_via (ชื่อ column ต่างจาก shipper_id)
+
+Columns:
+  shipper_id   SMALLINT    PRIMARY KEY  -- รหัส shipper
+  company_name VARCHAR(40) NOT NULL     -- ชื่อบริษัทขนส่ง เช่น 'Federal Shipping', 'Speedy Express', 'United Package'
+  phone        VARCHAR(24)              -- เบอร์โทรศัพท์
+
+Relationships:
+  - shipper_id ถูกอ้างอิงโดย orders.ship_via (one-to-many)
+  - [CAUTION] JOIN ด้วย orders.ship_via = shippers.shipper_id ไม่ใช่ orders.shipper_id
+
+Table: suppliers
+Description:
+  ข้อมูล supplier (vendor) ที่จัดหาสินค้าให้ Northwind
+  หนึ่ง supplier จัดหาได้หลาย products
+
+Columns:
+  supplier_id   SMALLINT    PRIMARY KEY  -- รหัส supplier
+  company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัท supplier เช่น 'Exotic Liquids', 'Tokyo Traders'
+  contact_name  VARCHAR(30)              -- ชื่อผู้ติดต่อ
+  contact_title VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Owner'
+  address       VARCHAR(60)              -- ที่อยู่
+  city          VARCHAR(15)              -- เมืองที่ตั้ง
+  region        VARCHAR(15)              -- ที่อยู่จริง [CAUTION] ไม่ใช่ work region, nullable สำหรับ supplier ในยุโรป
+  postal_code   VARCHAR(10)              -- รหัสไปรษณีย์
+  country       VARCHAR(15)              -- ประเทศ เช่น 'UK', 'USA', 'Japan', 'Germany', 'France'
+  phone         VARCHAR(24)              -- เบอร์โทรศัพท์
+  fax           VARCHAR(24)              -- เบอร์แฟกซ์
+  homepage      TEXT                     -- เว็บไซต์
+
+Relationships:
+  - supplier_id ถูกอ้างอิงโดย products.supplier_id (one-to-many)
+
+Table: territories
+Description:
+  พื้นที่รับผิดชอบการขาย (sales territory) ใช้จัดกลุ่มพนักงานขายตามพื้นที่
+  หนึ่ง territory สังกัดหนึ่ง region, หนึ่ง region มีได้หลาย territories
+
+Columns:
+  territory_id          VARCHAR(20) PRIMARY KEY  -- รหัส territory
+  territory_description VARCHAR(60) NOT NULL     -- ชื่อพื้นที่ เช่น 'Boston', 'Atlanta', 'Seattle'
+  region_id             SMALLINT    NOT NULL      -- FK → region.region_id: work region ที่สังกัด
+
+Relationships:
+  - region_id    → region.region_id                          (many-to-one)
+  - territory_id ถูกอ้างอิงโดย employee_territories.territory_id (one-to-many)
+  - เข้าถึงจากพนักงานผ่าน: employees → employee_territories → territories → region
+
+Table: us_states
+Description:
+  ตารางอ้างอิงรัฐในสหรัฐอเมริกา
+  [CAUTION] ตารางนี้ไม่มี FK เชื่อมกับตารางอื่นเลย
+            ไม่ควรนำมา JOIN กับตารางอื่น เว้นแต่ถามเรื่อง US states โดยตรง
+
+Columns:
+  state_id     SMALLINT     PRIMARY KEY  -- รหัสรัฐ
+  state_name   VARCHAR(100)              -- ชื่อรัฐ เช่น 'California', 'New York', 'Texas'
+  state_abbr   VARCHAR(2)                -- ตัวย่อ เช่น 'CA', 'NY', 'TX'
+  state_region VARCHAR(50)               -- ภูมิภาค เช่น 'West', 'East', 'South', 'North'

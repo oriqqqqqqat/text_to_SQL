@@ -8,14 +8,14 @@ Columns:
   company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัท supplier เช่น 'Exotic Liquids', 'Tokyo Traders'
   contact_name  VARCHAR(30)              -- ชื่อผู้ติดต่อ
   contact_title VARCHAR(30)              -- ตำแหน่ง เช่น 'Sales Representative', 'Owner'
-  address       VARCHAR(60)              -- ที่อยู่ [IGNORE]
+  address       VARCHAR(60)              -- ที่อยู่
   city          VARCHAR(15)              -- เมืองที่ตั้ง
   region        VARCHAR(15)              -- ที่อยู่จริง [CAUTION] ไม่ใช่ work region, nullable สำหรับ supplier ในยุโรป
-  postal_code   VARCHAR(10)              -- รหัสไปรษณีย์ [IGNORE]
+  postal_code   VARCHAR(10)              -- รหัสไปรษณีย์
   country       VARCHAR(15)              -- ประเทศ เช่น 'UK', 'USA', 'Japan', 'Germany', 'France'
-  phone         VARCHAR(24)              -- เบอร์โทรศัพท์ [IGNORE]
-  fax           VARCHAR(24)              -- เบอร์แฟกซ์ [IGNORE]
-  homepage      TEXT                     -- เว็บไซต์ [IGNORE]
+  phone         VARCHAR(24)              -- เบอร์โทรศัพท์
+  fax           VARCHAR(24)              -- เบอร์แฟกซ์
+  homepage      TEXT                     -- เว็บไซต์
 
 Relationships:
   - supplier_id ถูกอ้างอิงโดย products.supplier_id (one-to-many)

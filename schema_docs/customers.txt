@@ -16,7 +16,7 @@ Columns:
   postal_code   VARCHAR(10)              -- รหัสไปรษณีย์
   country       VARCHAR(15)              -- ประเทศ เช่น 'Germany', 'UK', 'France', 'USA', 'Mexico'
   phone         VARCHAR(24)              -- เบอร์โทรศัพท์
-  fax           VARCHAR(24)              -- เบอร์แฟกซ์ [IGNORE] ไม่ใช้ใน query ทั่วไป
+  fax           VARCHAR(24)              -- เบอร์แฟกซ์
 
 Relationships:
   - customer_id ถูกอ้างอิงโดย orders.customer_id (one-to-many)

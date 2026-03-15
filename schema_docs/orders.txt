@@ -12,11 +12,11 @@ Columns:
   shipped_date     DATE                     -- วันที่ส่งจริง (NULL = ยังไม่ได้ส่ง / pending)
   ship_via         SMALLINT                 -- FK → shippers.shipper_id: บริษัทขนส่ง
   freight          REAL                     -- ค่าขนส่ง (ไม่รวมใน revenue calculation)
-  ship_name        VARCHAR(40)              -- ชื่อผู้รับปลายทาง [IGNORE]
-  ship_address     VARCHAR(60)              -- ที่อยู่จัดส่ง [IGNORE]
+  ship_name        VARCHAR(40)              -- ชื่อผู้รับปลายทาง
+  ship_address     VARCHAR(60)              -- ที่อยู่จัดส่ง
   ship_city        VARCHAR(15)              -- เมืองปลายทาง
   ship_region      VARCHAR(15)              -- ภูมิภาคปลายทาง (ที่อยู่จัดส่ง) [CAUTION] ไม่ใช่ work region
-  ship_postal_code VARCHAR(10)              -- รหัสไปรษณีย์ปลายทาง [IGNORE]
+  ship_postal_code VARCHAR(10)              -- รหัสไปรษณีย์ปลายทาง
   ship_country     VARCHAR(15)              -- ประเทศปลายทาง
 
 Relationships:
