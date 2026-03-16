@@ -22,7 +22,7 @@ cur = conn.cursor()
 # สร้าง extension และตาราง ถ้ายังไม่มี
 cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS schema_embeddings (
+    CREATE TABLE IF NOT EXISTS schema_embeddings_long (
         id         SERIAL PRIMARY KEY,
         table_name VARCHAR(50),
         content    TEXT,
@@ -39,7 +39,7 @@ with open(EMBEDDINGS_FILE, "r", encoding="utf-8") as f:
 for record in records:
     cur.execute(
         """
-        INSERT INTO schema_embeddings (table_name, content, embedding)
+        INSERT INTO schema_embeddings_long (table_name, content, embedding)
         VALUES (%s, %s, %s)
         """,
         (

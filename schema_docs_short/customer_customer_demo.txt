@@ -1,0 +1,7 @@
+Table:customer_customer_demo
+Description:
+  เป็น junction table เชื่อมลูกค้ากับประเภทลูกค้า (demographic type)
+Columns:
+  customer_id      VARCHAR(5) REFERENCES customers(customer_id),                        -- FK → customers
+  customer_type_id VARCHAR(5) REFERENCES customer_demographics(customer_type_id),       -- FK → customer_demographics
+  PRIMARY KEY (customer_id, customer_type_id) -- junction table: ลูกค้า 1 คนมีได้หลาย demographic type

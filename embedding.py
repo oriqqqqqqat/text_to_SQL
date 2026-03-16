@@ -4,8 +4,8 @@ from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer('intfloat/multilingual-e5-base')
 
-txt_folder = "./schema_docs"  # โฟลเดอร์ที่เก็บไฟล์ txt
-output_file = "./embeddings.json"
+txt_folder = "./schema_docs_short"  # โฟลเดอร์ที่เก็บไฟล์ txt
+output_file = "./embeddings_short.json"
 
 results = []
 

@@ -1,0 +1,6 @@
+Table:customer_demographics
+Description:
+  ประเภทลูกค้า (customer demographic type)
+Columns:
+  customer_type_id VARCHAR(5) PRIMARY KEY, -- รหัสประเภทลูกค้า
+  customer_desc    TEXT                    -- คำอธิบายประเภทลูกค้า

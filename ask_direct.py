@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY_DIRECT"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL_NAME = "models/gemini-2.5-flash"
 
 
@@ -21,7 +21,7 @@ def get_db_connection():
 
 
 def load_schema_text():
-    return Path("./all_tables_with_relations.txt").read_text(encoding="utf-8")
+    return Path("./all_tables.txt").read_text(encoding="utf-8")
 
 
 def ask(question):
@@ -74,7 +74,18 @@ Question: {question}
 
 if __name__ == "__main__":
     questions = [
-        "ขอรายชื่อพนักงานที่ทำงานในเมือง London",
+        "พนักงานที่ทำงานใน region Eastern มีใครบ้าง",
+        "ลูกค้าที่อยู่ใน country เดียวกับ supplier มีใครบ้าง",
+        "สินค้าที่ราคาแพงที่สุดคืออะไร",
+        "มี order กี่รายการที่ยังไม่ได้จัดส่ง",
+        "supplier รายไหนทำรายได้ให้บริษัทมากที่สุด",
+        "สินค้าชิ้นไหนที่ใกล้หมด stock แล้ว",
+        "order ที่ใช้เวลาจัดส่งนานที่สุดคือ order ไหน และใช้เวลากี่วัน",
+        "พนักงานคนไหนที่ดูแลลูกค้าจากหลายประเทศมากที่สุด",
+        "บริษัทขนส่งไหนที่ส่งของช้าเฉลี่ยมากที่สุด",
+        "ลูกค้าที่สั่งซื้อสินค้าชิ้นเดิมซ้ำมากกว่า 3 ครั้งมีใครบ้าง",
+        "order ไหนบ้างที่มีสินค้ามากกว่า 5 รายการใน order",
+        "แต่ละ region มีพนักงานคนไหนรับผิดชอบ"
     ]
 
     for q in questions:
