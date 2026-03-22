@@ -2,6 +2,7 @@ from sentence_transformers import SentenceTransformer
 import psycopg2
 from google import genai
 from dotenv import load_dotenv
+from datetime import datetime
 import os
 
 load_dotenv()
@@ -20,17 +21,19 @@ cur = conn.cursor()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL_NAME = "models/gemini-2.5-flash"
 
+
 def retrieve(question, top_k=5):
     query_embedding = model.encode(f"query: {question}").tolist()
 
     cur.execute("""
         SELECT table_name, content
-        FROM schema_embeddings
+        FROM schema_embeddings_short
         ORDER BY embedding <=> %s::vector
         LIMIT %s
     """, (query_embedding, top_k))
 
     return cur.fetchall()
+
 
 def generate_sql(question):
     relevant_schemas = retrieve(question)
@@ -50,7 +53,6 @@ Schema:
 
 Question: {question}"""
 
-    
     print("\n" + "─" * 60)
     print("📤 PROMPT ที่ส่งให้ LLM:")
     print("─" * 60)
@@ -69,9 +71,48 @@ Question: {question}"""
     input_tokens  = usage.prompt_token_count     if usage else 0
     output_tokens = usage.candidates_token_count if usage else 0
 
-    return sql, input_tokens, output_tokens
+    retrieved_tables = [t for t, _ in relevant_schemas]
 
-# ทดสอบ
+    return sql, input_tokens, output_tokens, retrieved_tables
+
+
+def save_results(results, output_file):
+    lines = []
+    lines.append(f"Text-to-SQL Results (RAG)")
+    lines.append(f"Schema : schema_embeddings_short (pgvector)")
+    lines.append(f"Model  : {MODEL_NAME}")
+    lines.append(f"Date   : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    lines.append("=" * 60)
+
+    total_tokens_all = 0
+
+    for i, r in enumerate(results, 1):
+        lines.append(f"\n[{i}] Q: {r['question']}")
+        lines.append(f"    Retrieved: {', '.join(r['retrieved_tables'])}")
+        lines.append(f"    SQL:\n{r['sql']}")
+        lines.append(f"    Result: {r['result']}")
+        lines.append(f"    Status: {r['status']}")
+        lines.append(f"    Tokens: total={r['total_tokens']}  input={r['input_tokens']}  output={r['output_tokens']}")
+        lines.append("-" * 60)
+        total_tokens_all += r["total_tokens"]
+
+    success = sum(1 for r in results if "✅" in r["status"])
+    fail    = len(results) - success
+
+    lines.append(f"\nSummary")
+    lines.append(f"  Total questions : {len(results)}")
+    lines.append(f"  Success         : {success}")
+    lines.append(f"  Failed          : {fail}")
+    lines.append(f"  Accuracy        : {success / len(results) * 100:.1f}%")
+    lines.append(f"  Total tokens    : {total_tokens_all}")
+    lines.append(f"  Avg tokens/Q    : {total_tokens_all // len(results)}")
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+    print(f"\n📁 บันทึกแล้ว → {output_file}")
+
+
 if __name__ == "__main__":
     questions = [
         "พนักงานที่ทำงานใน region Eastern มีใครบ้าง",
@@ -84,7 +125,7 @@ if __name__ == "__main__":
         "พนักงานคนไหนที่ดูแลลูกค้าจากหลายประเทศมากที่สุด",
         "บริษัทขนส่งไหนที่ส่งของช้าเฉลี่ยมากที่สุด",
         "ลูกค้าที่สั่งซื้อสินค้าชิ้นเดิมซ้ำมากกว่า 3 ครั้งมีใครบ้าง",
-        "order ที่ยังไม่ได้ส่ง ลูกค้าคือใคร"
+        "order ที่ยังไม่ได้ส่ง ลูกค้าคือใคร",
         "แต่ละ region มีพนักงานคนไหนรับผิดชอบ",
         "พนักงานแต่ละคนรับ order ล่าสุดเมื่อไหร่",
         "สินค้าที่ยังจำหน่ายอยู่มีอะไรบ้าง พร้อมชื่อ category และคำอธิบาย",
@@ -93,15 +134,16 @@ if __name__ == "__main__":
         "order ที่ถูกจัดส่งโดยใช้ shipper ที่แพงที่สุดแต่ยังส่งช้า",
         "บริษัทขนส่งที่ขนสินค้า category Dairy Products มากที่สุด",
         "ลูกค้าที่ได้รับสินค้าช้ากว่ากำหนดมากที่สุด และใช้ shipper ไหน",
-        "สินค้าที่ถูกสั่งซื้อมากกว่า 100 หน่วยใน order เดียว",
-        "หา work region ของพนักงาน"
+        "สินค้าที่ถูกสั่งซื้อมากกว่า 100 หน่วยใน order เดียว"
     ]
+
+    all_results = []
 
     for question in questions:
         print("=" * 60)
         print(f"❓ Question : {question}\n")
 
-        sql, input_tokens, output_tokens = generate_sql(question)
+        sql, input_tokens, output_tokens, retrieved_tables = generate_sql(question)
         total_tokens = input_tokens + output_tokens
 
         print(f"\n📄 SQL      :\n{sql}\n")
@@ -111,14 +153,33 @@ if __name__ == "__main__":
             result = cur.fetchall()
             print(f"📊 Result   : {result}")
             print(f"🔖 Status   : ✅ Success")
+            status = "✅ Success"
         except Exception as e:
+            result = []
+            conn.rollback()  # ล้าง transaction ที่พังออก ให้ query ถัดไปรันได้
             print(f"📊 Result   : []")
             print(f"🔖 Status   : ❌ Error: {e}")
+            status = f"❌ Error: {e}"
 
         print(f"🔢 Tokens   : total={total_tokens}  "
               f"input={input_tokens}  "
               f"output={output_tokens}")
         print("=" * 60)
+
+        all_results.append({
+            "question"        : question,
+            "retrieved_tables": retrieved_tables,
+            "sql"             : sql,
+            "result"          : result,
+            "status"          : status,
+            "input_tokens"    : input_tokens,
+            "output_tokens"   : output_tokens,
+            "total_tokens"    : total_tokens
+        })
+
+    # บันทึกผลลัพธ์ทั้งหมด
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    save_results(all_results, f"results_rag_{timestamp}.txt")
 
     cur.close()
     conn.close()
