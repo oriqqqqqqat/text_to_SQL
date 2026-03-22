@@ -1,6 +1,5 @@
 Table:customers
-Description:
-  ข้อมูลลูกค้า (customer) ที่สั่งซื้อสินค้า
+Description:ข้อมูลลูกค้า (customer) ที่สั่งซื้อสินค้า
 cloumn:
   customer_id   VARCHAR(5) PRIMARY KEY, -- รหัสลูกค้า (5 ตัวอักษร เช่น ALFKI)
   company_name  VARCHAR(40) NOT NULL,   -- ชื่อบริษัทลูกค้า

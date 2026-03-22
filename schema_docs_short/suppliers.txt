@@ -1,5 +1,5 @@
 Table:suppliers
-Description: ข้อมูล supplier ที่จัดหาสินค้าให้กับบริษัท
+Description:ข้อมูล supplier ที่จัดหาสินค้าให้กับบริษัท
 Columns:
   supplier_id   SMALLINT PRIMARY KEY,  -- รหัส supplier
   company_name  VARCHAR(40) NOT NULL,  -- ชื่อบริษัท supplier

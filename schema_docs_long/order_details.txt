@@ -1,9 +1,7 @@
 Table: order_details
 Description:
-  รายการสินค้าแต่ละชิ้นภายใน order (line items)
-  หนึ่ง order มีได้หลาย order_details
+  รายการสินค้าแต่ละชิ้นภายใน order (line items) หนึ่ง order มีได้หลาย order_details
   [IMPORTANT] revenue ที่แท้จริง = unit_price * quantity * (1 - discount)
-
 Columns:
   order_id   SMALLINT NOT NULL  -- FK → orders.order_id
   product_id SMALLINT NOT NULL  -- FK → products.product_id
@@ -11,11 +9,9 @@ Columns:
   quantity   SMALLINT NOT NULL  -- จำนวนที่สั่ง
   discount   REAL     NOT NULL  -- ส่วนลด 0.0–1.0 (เช่น 0.05 = 5%, 0.0 = ไม่มีส่วนลด)
   PRIMARY KEY (order_id, product_id)
-
 Relationships:
   - order_id   → orders.order_id      (many-to-one)
   - product_id → products.product_id  (many-to-one)
-
 Common Queries:
   - revenue ต่อ line item  → unit_price * quantity * (1 - discount)
   - revenue ต่อ order      → SUM(unit_price * quantity * (1 - discount)) GROUP BY order_id

@@ -1,8 +1,6 @@
 Table: suppliers
 Description:
-  ข้อมูล supplier (vendor) ที่จัดหาสินค้าให้ Northwind
-  หนึ่ง supplier จัดหาได้หลาย products
-
+  ข้อมูล supplier (vendor) ที่จัดหาสินค้าให้ Northwind หนึ่ง supplier จัดหาได้หลาย products
 Columns:
   supplier_id   SMALLINT    PRIMARY KEY  -- รหัส supplier
   company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัท supplier เช่น 'Exotic Liquids', 'Tokyo Traders'
@@ -16,6 +14,5 @@ Columns:
   phone         VARCHAR(24)              -- เบอร์โทรศัพท์
   fax           VARCHAR(24)              -- เบอร์แฟกซ์
   homepage      TEXT                     -- เว็บไซต์
-
 Relationships:
   - supplier_id ถูกอ้างอิงโดย products.supplier_id (one-to-many)

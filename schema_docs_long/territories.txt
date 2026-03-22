@@ -2,13 +2,11 @@ Table: territories
 Description:
   พื้นที่รับผิดชอบการขาย (sales territory) ใช้จัดกลุ่มพนักงานขายตามพื้นที่
   หนึ่ง territory สังกัดหนึ่ง region, หนึ่ง region มีได้หลาย territories
-
 Columns:
   territory_id          VARCHAR(20) PRIMARY KEY  -- รหัส territory
   territory_description VARCHAR(60) NOT NULL     -- ชื่อพื้นที่ เช่น 'Boston', 'Atlanta', 'Seattle'
   region_id             SMALLINT    NOT NULL      -- FK → region.region_id: work region ที่สังกัด
-
 Relationships:
-  - region_id    → region.region_id                          (many-to-one)
+  - region_id    → region.region_id    (many-to-one)
   - territory_id ถูกอ้างอิงโดย employee_territories.territory_id (one-to-many)
   - เข้าถึงจากพนักงานผ่าน: employees → employee_territories → territories → region

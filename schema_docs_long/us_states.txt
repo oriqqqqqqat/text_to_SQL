@@ -1,9 +1,6 @@
 Table: us_states
-Description:
-  ตารางอ้างอิงรัฐในสหรัฐอเมริกา
-  [CAUTION] ตารางนี้ไม่มี FK เชื่อมกับตารางอื่นเลย
-            ไม่ควรนำมา JOIN กับตารางอื่น เว้นแต่ถามเรื่อง US states โดยตรง
-
+Description: ตารางอ้างอิงรัฐในสหรัฐอเมริกา [CAUTION] ตารางนี้ไม่มี FK เชื่อมกับตารางอื่นเลย
+ไม่ควรนำมา JOIN กับตารางอื่น เว้นแต่ถามเรื่อง US states โดยตรง
 Columns:
   state_id     SMALLINT     PRIMARY KEY  -- รหัสรัฐ
   state_name   VARCHAR(100)              -- ชื่อรัฐ เช่น 'California', 'New York', 'Texas'

@@ -10,4 +10,4 @@ Columns:
   units_in_stock    SMALLINT,                                    -- จำนวนสินค้าคงคลัง
   units_on_order    SMALLINT,                                    -- จำนวนที่กำลังสั่งซื้อเพิ่ม
   reorder_level     SMALLINT,                                    -- จำนวนขั้นต่ำที่ต้องสั่งซื้อเพิ่ม
-  discontinued      INTEGER NOT NULL                             -- 1 = หยุดจำหน่ายแล้ว, 0 = ยังจำหน่ายอยู่
+  discontinued      INTEGER NOT NULL    

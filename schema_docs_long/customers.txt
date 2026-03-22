@@ -2,9 +2,7 @@ Table: customers
 Description:
   ข้อมูลลูกค้า (buyer) ที่สั่งซื้อสินค้าจาก Northwind
   หนึ่ง customer มีได้หลาย orders
-  Note: ลูกค้าใน Northwind เป็นบริษัท (B2B) ไม่ใช่บุคคล
-        ดังนั้น company_name คือชื่อหลักที่ใช้แสดงผล ไม่ใช่ contact_name
-
+Note: ลูกค้าใน Northwind เป็นบริษัท (B2B) ไม่ใช่บุคคล ดังนั้น company_name คือชื่อหลักที่ใช้แสดงผล ไม่ใช่ contact_name
 Columns:
   customer_id   VARCHAR(5)  PRIMARY KEY  -- รหัสลูกค้า 5 ตัวอักษรพิมพ์ใหญ่ เช่น 'ALFKI', 'ANATR', 'ANTON'
   company_name  VARCHAR(40) NOT NULL     -- ชื่อบริษัทลูกค้า เช่น 'Alfreds Futterkiste', 'Around the Horn'
@@ -17,12 +15,10 @@ Columns:
   country       VARCHAR(15)              -- ประเทศ เช่น 'Germany', 'UK', 'France', 'USA', 'Mexico'
   phone         VARCHAR(24)              -- เบอร์โทรศัพท์
   fax           VARCHAR(24)              -- เบอร์แฟกซ์
-
 Relationships:
   - customer_id ถูกอ้างอิงโดย orders.customer_id (one-to-many)
   - customer_id ถูกอ้างอิงโดย customer_customer_demo.customer_id (one-to-many)
-
 Common Queries:
   - ดูยอดสั่งซื้อต่อลูกค้า → JOIN orders ON customers.customer_id = orders.customer_id
-  - กรองตามประเทศ          → WHERE country = 'Germany'
-  - ค้นหาชื่อบริษัท         → WHERE company_name LIKE '%Wilman Kala%'
+  - กรองตามประเทศ → WHERE country = 'Germany'
+  - ค้นหาชื่อบริษัท  → WHERE company_name LIKE '%Wilman Kala%'

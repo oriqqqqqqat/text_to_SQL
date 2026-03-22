@@ -1,6 +1,5 @@
 Table:employee_territories
-Description: เป็น junction table เชื่อม work region ที่พนักงานรับผิดชอบ
-  ใช้ตารางนี้เมื่อถามเกี่ยวกับ region ที่พนักงานทำงาน/รับผิดชอบ
+Description: เป็น junction table เชื่อม work region ที่พนักงานรับผิดชอบ ใช้ตารางนี้เมื่อถามเกี่ยวกับ region ที่พนักงานทำงาน/รับผิดชอบ
 Columns:
   employee_id  SMALLINT    REFERENCES employees(employee_id),    -- FK → employees
   territory_id VARCHAR(20) REFERENCES territories(territory_id), -- FK → territories → region

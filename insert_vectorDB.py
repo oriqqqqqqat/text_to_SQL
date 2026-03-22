@@ -13,7 +13,7 @@ DB_CONFIG = {
     "password": os.getenv("DB_PASSWORD"),
     "port":     os.getenv("DB_PORT", 5432)
 }
-EMBEDDINGS_FILE = "./embeddings.json"
+EMBEDDINGS_FILE = "./embeddings_long.json"
 # ==================
 
 conn = psycopg2.connect(**DB_CONFIG)

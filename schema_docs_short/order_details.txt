@@ -1,8 +1,6 @@
 Table:order_details
-Description:
-  รายละเอียดของ order แต่ละรายการ
+Description:รายละเอียดของ order แต่ละรายการ
 Columns:
-  -- revenue ที่แท้จริง = unit_price * quantity * (1 - discount)
   order_id   SMALLINT REFERENCES orders(order_id),   -- FK → orders
   product_id SMALLINT REFERENCES products(product_id), -- FK → products
   unit_price REAL     NOT NULL,                        -- ราคาต่อหน่วย ณ วันที่สั่ง (อาจต่างจาก products.unit_price)

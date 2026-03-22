@@ -1,18 +1,14 @@
 Table: employee_territories
 Description:
-  Junction table เชื่อมพนักงานกับ territory ที่รับผิดชอบ (many-to-many)
-  ใช้ตารางนี้เมื่อถามเกี่ยวกับ territory/region ที่พนักงานดูแล
+  Junction table เชื่อมพนักงานกับ territory ที่รับผิดชอบ (many-to-many) ใช้ตารางนี้เมื่อถามเกี่ยวกับ territory/region ที่พนักงานดูแล
   Note: ตารางนี้ไม่มี column อื่นนอกจาก FK ทั้งสอง ไม่มีข้อมูลเพิ่มเติมเช่น วันที่รับผิดชอบ
-
 Columns:
   employee_id  SMALLINT    NOT NULL  -- FK → employees.employee_id
   territory_id VARCHAR(20) NOT NULL  -- FK → territories.territory_id
   PRIMARY KEY (employee_id, territory_id)
-
 Relationships:
   - employee_id  → employees.employee_id       (many-to-one)
   - territory_id → territories.territory_id    (many-to-one)
-
 Common Queries:
   - หา region ที่พนักงานรับผิดชอบ → JOIN 3 ตาราง:
     employees → employee_territories → territories → region

@@ -1,9 +1,6 @@
 Table: products
 Description:
-  ข้อมูลสินค้าที่จำหน่ายโดย Northwind
-  [CAUTION] unit_price ในตารางนี้คือราคาปัจจุบัน
-             ถ้าต้องการราคา ณ วันที่สั่งซื้อจริง ต้องใช้ order_details.unit_price แทน
-
+  ข้อมูลสินค้าที่จำหน่ายโดย Northwind [CAUTION] unit_price ในตารางนี้คือราคาปัจจุบัน ถ้าต้องการราคา ณ วันที่สั่งซื้อจริง ต้องใช้ order_details.unit_price แทน
 Columns:
   product_id        SMALLINT    PRIMARY KEY  -- รหัสสินค้า
   product_name      VARCHAR(40) NOT NULL     -- ชื่อสินค้า เช่น 'Chai', 'Chang', 'Aniseed Syrup'
@@ -15,12 +12,10 @@ Columns:
   units_on_order    SMALLINT                 -- จำนวนที่กำลังสั่งซื้อเพิ่มจาก supplier
   reorder_level     SMALLINT                 -- จำนวนขั้นต่ำที่ trigger การสั่งซื้อเพิ่ม
   discontinued      INTEGER     NOT NULL     -- 0 = ยังจำหน่าย, 1 = หยุดจำหน่ายแล้ว
-
 Relationships:
   - product_id ถูกอ้างอิงโดย order_details.product_id  (one-to-many)
-  - supplier_id → suppliers.supplier_id                 (many-to-one)
-  - category_id → categories.category_id               (many-to-one)
-
+  - supplier_id → suppliers.supplier_id (many-to-one)
+  - category_id → categories.category_id (many-to-one)
 Common Queries:
   - สินค้าที่ยังจำหน่าย        → WHERE discontinued = 0
   - สินค้าที่หยุดจำหน่าย       → WHERE discontinued = 1

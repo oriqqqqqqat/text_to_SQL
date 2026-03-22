@@ -3,7 +3,6 @@ Description:
   ข้อมูลพนักงานขาย (sales employee) ที่ดูแลและติดต่อลูกค้าโดยตรง
   มีโครงสร้าง hierarchy ผ่าน reports_to (self-reference)
   Note: ชื่อเต็มพนักงาน = first_name || ' ' || last_name
-
 Columns:
   employee_id        SMALLINT    PRIMARY KEY  -- รหัสพนักงาน
   last_name          VARCHAR(20) NOT NULL     -- นามสกุล
@@ -23,15 +22,12 @@ Columns:
   notes              TEXT                     -- ประวัติย่อพนักงาน
   reports_to         SMALLINT                 -- FK → employees.employee_id (self-ref) = manager โดยตรง, NULL = ไม่มี manager (top-level)
   photo_path         VARCHAR(255)             -- path รูปภาพ
-
 Relationships:
   - employee_id ถูกอ้างอิงโดย orders.employee_id           (one-to-many)
   - employee_id ถูกอ้างอิงโดย employee_territories.employee_id (one-to-many)
   - reports_to  → employees.employee_id (self-reference: manager hierarchy)
-
 Common Queries:
   - ชื่อเต็มพนักงาน        → first_name || ' ' || last_name
   - หา manager ของพนักงาน  → Self JOIN: e JOIN employees m ON e.reports_to = m.employee_id
   - หา subordinate ทั้งหมด → WHERE reports_to = <employee_id>
-  - work region ที่รับผิดชอบ → JOIN employee_territories → territories → region
-                               (ไม่ใช่ employees.region)
+  - work region ที่รับผิดชอบ → JOIN employee_territories → territories → region(ไม่ใช่ employees.region)

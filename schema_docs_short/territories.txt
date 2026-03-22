@@ -1,6 +1,5 @@
 Table:territories
-Description:
-  พื้นที่รับผิดชอบการขาย (sales territory) เช่น Boston, Atlanta
+Description:พื้นที่รับผิดชอบการขาย (sales territory) เช่น Boston, Atlanta
 columns:
   territory_id          VARCHAR(20) PRIMARY KEY,                       -- รหัส territory(พื้นที่รับผิดชอบการขาย)
   territory_description VARCHAR(60) NOT NULL,                          -- ชื่อ territory เช่น Boston, Atlanta

@@ -1,6 +1,5 @@
 Table:employees
-Description:
-  ข้อมูลพนักงานขาย (sales employee) ที่ติดต่อกับลูกค้าโดยตรง
+Description:ข้อมูลพนักงานขาย (sales employee) ที่ติดต่อกับลูกค้าโดยตรง
 Columns:
   employee_id       SMALLINT PRIMARY KEY,                           -- รหัสพนักงาน
   last_name         VARCHAR(20) NOT NULL,                           -- นามสกุล
@@ -19,4 +18,4 @@ Columns:
   photo             BYTEA,                                          -- รูปถ่ายพนักงาน
   notes             TEXT,                                           -- ประวัติย่อพนักงาน
   reports_to        SMALLINT REFERENCES employees(employee_id),    -- FK → employees (self-ref): รหัส manager โดยตรง
-  photo_path        VARCHAR(255)                                    -- path รูปภาพ
+  photo_path        VARCHAR(255)                    

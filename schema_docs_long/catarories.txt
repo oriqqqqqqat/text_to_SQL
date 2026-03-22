@@ -1,14 +1,11 @@
 Table: categories
 Description: หมวดหมู่สินค้า ใช้จัดกลุ่ม products หนึ่ง category มีได้หลาย products
-
 Columns:
   category_id   INTEGER PRIMARY KEY   -- รหัส category
   category_name VARCHAR(15) NOT NULL  -- ชื่อหมวด เช่น 'Beverages', 'Seafood', 'Dairy Products', 'Condiments'
   description   TEXT                  -- คำอธิบายหมวดหมู่
   picture       BYTEA                 -- binary รูปภาพ
-
 Relationships:
   - category_id ถูกอ้างอิงโดย products.category_id (one-to-many)
-
 Common Queries:
   - JOIN products ON categories.category_id = products.category_id
