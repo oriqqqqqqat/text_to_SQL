@@ -1,0 +1,36 @@
+Text-to-SQL Results (RAG)
+Schema : schema_embeddings_short (pgvector)
+Model  : models/gemini-2.5-pro
+Date   : 2026-04-20 22:43:14
+============================================================
+
+[1] Q: ลูกค้าจากประเทศเยอรมนีนิยมซื้อสินค้าอะไรมากที่สุด
+    Retrieved: customers, orders, products, suppliers, customer_demographics
+    SQL:
+SELECT T3.product_name
+FROM customers AS T1
+INNER JOIN orders AS T2
+  ON T1.customer_id = T2.customer_id
+INNER JOIN order_details AS T4
+  ON T2.order_id = T4.order_id
+INNER JOIN products AS T3
+  ON T4.product_id = T3.product_id
+WHERE
+  T1.country = 'Germany'
+GROUP BY
+  T3.product_name
+ORDER BY
+  SUM(T4.quantity) DESC
+LIMIT 1;
+    Result: [('Camembert Pierrot',)]
+    Status: ✅ Success
+    Tokens: total=1213  input=1083  output=130
+------------------------------------------------------------
+
+Summary
+  Total questions : 1
+  Success         : 1
+  Failed          : 0
+  Accuracy        : 100.0%
+  Total tokens    : 1213
+  Avg tokens/Q    : 1213

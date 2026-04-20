@@ -1,0 +1,35 @@
+Text-to-SQL Results
+Schema: all_tables.txt
+Model : models/gemini-2.5-flash-lite
+Date  : 2026-04-20 19:44:29
+============================================================
+
+[1] Q: พนักงานแต่ละคนรับผิดชอบพื้นที่การทำงานใดบ้าง
+    SQL:
+SELECT
+  e.first_name,
+  e.last_name,
+  r.region_description
+FROM employees AS e
+JOIN employee_territories AS et
+  ON e.employee_id = et.employee_id
+JOIN territories AS t
+  ON et.territory_id = t.territory_id
+JOIN region AS r
+  ON t.region_id = r.region_id
+ORDER BY
+  e.first_name,
+  e.last_name,
+  r.region_description;
+    Result: [('Andrew', 'Fuller', 'Eastern'), ('Andrew', 'Fuller', 'Eastern'), ('Andrew', 'Fuller', 'Eastern'), ('Andrew', 'Fuller', 'Eastern'), ('Andrew', 'Fuller', 'Eastern'), ('Andrew', 'Fuller', 'Eastern'), ('Andrew', 'Fuller', 'Eastern'), ('Anne', 'Dodsworth', 'Northern'), ('Anne', 'Dodsworth', 'Northern'), ('Anne', 'Dodsworth', 'Northern'), ('Anne', 'Dodsworth', 'Northern'), ('Anne', 'Dodsworth', 'Northern'), ('Janet', 'Leverling', 'Southern'), ('Janet', 'Leverling', 'Southern'), ('Janet', 'Leverling', 'Southern'), ('Janet', 'Leverling', 'Southern'), ('Laura', 'Callahan', 'Northern'), ('Laura', 'Callahan', 'Northern'), ('Laura', 'Callahan', 'Northern'), ('Laura', 'Callahan', 'Northern'), ('Margaret', 'Peacock', 'Eastern'), ('Margaret', 'Peacock', 'Eastern'), ('Margaret', 'Peacock', 'Eastern'), ('Nancy', 'Davolio', 'Eastern'), ('Nancy', 'Davolio', 'Eastern'), ('Steven', 'Buchanan', 'Eastern'), ('Steven', 'Buchanan', 'Eastern'), ('Steven', 'Buchanan', 'Eastern'), ('Steven', 'Buchanan', 'Eastern'), ('Steven', 'Buchanan', 'Eastern'), ('Steven', 'Buchanan', 'Eastern'), ('Steven', 'Buchanan', 'Eastern')]
+    Status: ✅ Success
+    Tokens: total=2352  input=2234  output=118
+------------------------------------------------------------
+
+Summary
+  Total questions : 1
+  Success         : 1
+  Failed          : 0
+  Accuracy        : 100.0%
+  Total tokens    : 2352
+  Avg tokens/Q    : 2352

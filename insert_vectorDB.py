@@ -13,7 +13,7 @@ DB_CONFIG = {
     "password": os.getenv("DB_PASSWORD"),
     "port":     os.getenv("DB_PORT", 5432)
 }
-EMBEDDINGS_FILE = "./embeddings_long.json"
+EMBEDDINGS_FILE = "./embeddings_short.json"
 # ==================
 
 conn = psycopg2.connect(**DB_CONFIG)
@@ -22,7 +22,7 @@ cur = conn.cursor()
 # สร้าง extension และตาราง ถ้ายังไม่มี
 cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS schema_embeddings_long (
+    CREATE TABLE IF NOT EXISTS schema_embeddings_short (
         id         SERIAL PRIMARY KEY,
         table_name VARCHAR(50),
         content    TEXT,
@@ -39,7 +39,7 @@ with open(EMBEDDINGS_FILE, "r", encoding="utf-8") as f:
 for record in records:
     cur.execute(
         """
-        INSERT INTO schema_embeddings_long (table_name, content, embedding)
+        INSERT INTO schema_embeddings_short (table_name, content, embedding)
         VALUES (%s, %s, %s)
         """,
         (

@@ -1,0 +1,402 @@
+Text-to-SQL Results (RAG)
+Schema : schema_embeddings_short (pgvector)
+Model  : models/gemini-2.5-flash-lite
+Date   : 2026-04-20 19:31:22
+============================================================
+
+[1] Q: พนักงานที่ทำงานอยู่ในภูมิภาคตะวันออกมีใครบ้าง
+    Retrieved: region, employees, employee_territories, territories, customers
+    SQL:
+SELECT
+  e.first_name,
+  e.last_name
+FROM employees AS e
+JOIN employee_territories AS et
+  ON e.employee_id = et.employee_id
+JOIN territories AS t
+  ON et.territory_id = t.territory_id
+JOIN region AS r
+  ON t.region_id = r.region_id
+WHERE
+  r.region_description = 'Eastern';
+    Result: [('Nancy', 'Davolio'), ('Nancy', 'Davolio'), ('Andrew', 'Fuller'), ('Andrew', 'Fuller'), ('Andrew', 'Fuller'), ('Andrew', 'Fuller'), ('Andrew', 'Fuller'), ('Andrew', 'Fuller'), ('Andrew', 'Fuller'), ('Margaret', 'Peacock'), ('Margaret', 'Peacock'), ('Margaret', 'Peacock'), ('Steven', 'Buchanan'), ('Steven', 'Buchanan'), ('Steven', 'Buchanan'), ('Steven', 'Buchanan'), ('Steven', 'Buchanan'), ('Steven', 'Buchanan'), ('Steven', 'Buchanan')]
+    Status: ✅ Success
+    Tokens: total=1001  input=900  output=101
+------------------------------------------------------------
+
+[2] Q: มีลูกค้าคนไหนบ้างที่อยู่ประเทศเดียวกับผู้จัดจำหน่าย
+    Retrieved: customers, suppliers, orders, products, customer_customer_demo
+    SQL:
+SELECT DISTINCT
+  c.company_name
+FROM customers AS c
+JOIN suppliers AS s
+  ON c.country = s.country;
+    Result: [('FISSA Fabrica Inter. Salchichas S.A.',), ('Wilman Kala',), ('Magazzini Alimentari Riuniti',), ('Wellington Importadora',), ('The Cracker Box',), ('Toms Spezialitäten',), ("Let's Stop N Shop",), ('Lehmanns Marktstand',), ('Rattlesnake Canyon Grocery',), ('Mère Paillarde',), ('Que Delícia',), ('The Big Cheese',), ('Königlich Essen',), ('North/South',), ('Frankenversand',), ('Split Rail Beer & Ale',), ('Folies gourmandes',), ('Around the Horn',), ('Comércio Mineiro',), ('Gourmet Lanchonetes',), ('Santé Gourmet',), ('Victuailles en stock',), ('Alfreds Futterkiste',), ('Lonesome Pine Restaurant',), ("La corne d'abondance",), ('Old World Delicatessen',), ('Die Wandernde Kuh',), ('Godos Cocina Típica',), ('Blondesddsl père et fils',), ('Morgenstern Gesundkost',), ('Ricardo Adocicados',), ('Spécialités du monde',), ("La maison d'Asie",), ('Bólido Comidas preparadas',), ('Wartian Herkku',), ('Paris spécialités',), ("Bon app'",), ('Berglunds snabbköp',), ('Seven Seas Imports',), ('Eastern Connection',), ('Drachenblut Delikatessen',), ('Ottilies Käseladen',), ('Galería del gastrónomo',), ('Tradição Hipermercados',), ('Hungry Coyote Import Store',), ('Save-a-lot Markets',), ('Reggiani Caseifici',), ('Great Lakes Food Market',), ('Queen Cozinha',), ('Simons bistro',), ('Laughing Bacchus Wine Cellars',), ('QUICK-Stop',), ('Vins et alcools Chevalier',), ('Consolidated Holdings',), ('Franchi S.p.A.',), ('Hanari Carnes',), ('Folk och fä HB',), ('Blauer See Delikatessen',), ("Trail's Head Gourmet Provisioners",), ('Familia Arquibaldo',), ('Vaffeljernet',), ('Lazy K Kountry Store',), ('White Clover Markets',), ('Romero y tomillo',), ('France restauration',), ("B's Beverages",), ('Bottom-Dollar Markets',), ('Island Trading',), ('Du monde entier',)]
+    Status: ✅ Success
+    Tokens: total=1174  input=1139  output=35
+------------------------------------------------------------
+
+[3] Q: สินค้าแต่ละชิ้นอยู่ในหมวดหมู่อะไร
+    Retrieved: catarories, order_details, products, customers, territories
+    SQL:
+SELECT
+  p.product_name,
+  c.category_name
+FROM products AS p
+JOIN categories AS c
+  ON p.category_id = c.category_id;
+    Result: [('Chai', 'Beverages'), ('Chang', 'Beverages'), ('Aniseed Syrup', 'Condiments'), ("Chef Anton's Cajun Seasoning", 'Condiments'), ("Chef Anton's Gumbo Mix", 'Condiments'), ("Grandma's Boysenberry Spread", 'Condiments'), ("Uncle Bob's Organic Dried Pears", 'Produce'), ('Northwoods Cranberry Sauce', 'Condiments'), ('Mishi Kobe Niku', 'Meat/Poultry'), ('Ikura', 'Seafood'), ('Queso Cabrales', 'Dairy Products'), ('Queso Manchego La Pastora', 'Dairy Products'), ('Konbu', 'Seafood'), ('Tofu', 'Produce'), ('Genen Shouyu', 'Condiments'), ('Pavlova', 'Confections'), ('Alice Mutton', 'Meat/Poultry'), ('Carnarvon Tigers', 'Seafood'), ('Teatime Chocolate Biscuits', 'Confections'), ("Sir Rodney's Marmalade", 'Confections'), ("Sir Rodney's Scones", 'Confections'), ("Gustaf's Knäckebröd", 'Grains/Cereals'), ('Tunnbröd', 'Grains/Cereals'), ('Guaraná Fantástica', 'Beverages'), ('NuNuCa Nuß-Nougat-Creme', 'Confections'), ('Gumbär Gummibärchen', 'Confections'), ('Schoggi Schokolade', 'Confections'), ('Rössle Sauerkraut', 'Produce'), ('Thüringer Rostbratwurst', 'Meat/Poultry'), ('Nord-Ost Matjeshering', 'Seafood'), ('Gorgonzola Telino', 'Dairy Products'), ('Mascarpone Fabioli', 'Dairy Products'), ('Geitost', 'Dairy Products'), ('Sasquatch Ale', 'Beverages'), ('Steeleye Stout', 'Beverages'), ('Inlagd Sill', 'Seafood'), ('Gravad lax', 'Seafood'), ('Côte de Blaye', 'Beverages'), ('Chartreuse verte', 'Beverages'), ('Boston Crab Meat', 'Seafood'), ("Jack's New England Clam Chowder", 'Seafood'), ('Singaporean Hokkien Fried Mee', 'Grains/Cereals'), ('Ipoh Coffee', 'Beverages'), ('Gula Malacca', 'Condiments'), ('Rogede sild', 'Seafood'), ('Spegesild', 'Seafood'), ('Zaanse koeken', 'Confections'), ('Chocolade', 'Confections'), ('Maxilaku', 'Confections'), ('Valkoinen suklaa', 'Confections'), ('Manjimup Dried Apples', 'Produce'), ('Filo Mix', 'Grains/Cereals'), ('Perth Pasties', 'Meat/Poultry'), ('Tourtière', 'Meat/Poultry'), ('Pâté chinois', 'Meat/Poultry'), ('Gnocchi di nonna Alice', 'Grains/Cereals'), ('Ravioli Angelo', 'Grains/Cereals'), ('Escargots de Bourgogne', 'Seafood'), ('Raclette Courdavault', 'Dairy Products'), ('Camembert Pierrot', 'Dairy Products'), ("Sirop d'érable", 'Condiments'), ('Tarte au sucre', 'Confections'), ('Vegie-spread', 'Condiments'), ('Wimmers gute Semmelknödel', 'Grains/Cereals'), ('Louisiana Fiery Hot Pepper Sauce', 'Condiments'), ('Louisiana Hot Spiced Okra', 'Condiments'), ('Laughing Lumberjack Lager', 'Beverages'), ('Scottish Longbreads', 'Confections'), ('Gudbrandsdalsost', 'Dairy Products'), ('Outback Lager', 'Beverages'), ('Flotemysost', 'Dairy Products'), ('Mozzarella di Giovanni', 'Dairy Products'), ('Röd Kaviar', 'Seafood'), ('Longlife Tofu', 'Produce'), ('Rhönbräu Klosterbier', 'Beverages'), ('Lakkalikööri', 'Beverages'), ('Original Frankfurter grüne Soße', 'Condiments')]
+    Status: ✅ Success
+    Tokens: total=858  input=812  output=46
+------------------------------------------------------------
+
+[4] Q: คำสั่งซื้อแต่ละรายการใช้บริษัทขนส่งเจ้าไหน
+    Retrieved: shippers, orders, order_details, suppliers, customers
+    SQL:
+SELECT
+  o.order_id,
+  s.company_name
+FROM orders AS o
+JOIN shippers AS s
+  ON o.ship_via = s.shipper_id;
+    Result: [(10248, 'Federal Shipping'), (10249, 'Speedy Express'), (10250, 'United Package'), (10251, 'Speedy Express'), (10252, 'United Package'), (10253, 'United Package'), (10254, 'United Package'), (10255, 'Federal Shipping'), (10256, 'United Package'), (10257, 'Federal Shipping'), (10258, 'Speedy Express'), (10259, 'Federal Shipping'), (10260, 'Speedy Express'), (10261, 'United Package'), (10262, 'Federal Shipping'), (10263, 'Federal Shipping'), (10264, 'Federal Shipping'), (10265, 'Speedy Express'), (10266, 'Federal Shipping'), (10267, 'Speedy Express'), (10268, 'Federal Shipping'), (10269, 'Speedy Express'), (10270, 'Speedy Express'), (10271, 'United Package'), (10272, 'United Package'), (10273, 'Federal Shipping'), (10274, 'Speedy Express'), (10275, 'Speedy Express'), (10276, 'Federal Shipping'), (10277, 'Federal Shipping'), (10278, 'United Package'), (10279, 'United Package'), (10280, 'Speedy Express'), (10281, 'Speedy Express'), (10282, 'Speedy Express'), (10283, 'Federal Shipping'), (10284, 'Speedy Express'), (10285, 'United Package'), (10286, 'Federal Shipping'), (10287, 'Federal Shipping'), (10288, 'Speedy Express'), (10289, 'Federal Shipping'), (10290, 'Speedy Express'), (10291, 'United Package'), (10292, 'United Package'), (10293, 'Federal Shipping'), (10294, 'United Package'), (10295, 'United Package'), (10296, 'Speedy Express'), (10297, 'United Package'), (10298, 'United Package'), (10299, 'United Package'), (10300, 'United Package'), (10301, 'United Package'), (10302, 'United Package'), (10303, 'United Package'), (10304, 'United Package'), (10305, 'Federal Shipping'), (10306, 'Federal Shipping'), (10307, 'United Package'), (10308, 'Federal Shipping'), (10309, 'Speedy Express'), (10310, 'United Package'), (10311, 'Federal Shipping'), (10312, 'United Package'), (10313, 'United Package'), (10314, 'United Package'), (10315, 'United Package'), (10316, 'Federal Shipping'), (10317, 'Speedy Express'), (10318, 'United Package'), (10319, 'Federal Shipping'), (10320, 'Federal Shipping'), (10321, 'United Package'), (10322, 'Federal Shipping'), (10323, 'Speedy Express'), (10324, 'Speedy Express'), (10325, 'Federal Shipping'), (10326, 'United Package'), (10327, 'Speedy Express'), (10328, 'Federal Shipping'), (10329, 'United Package'), (10330, 'Speedy Express'), (10331, 'Speedy Express'), (10332, 'United Package'), (10333, 'Federal Shipping'), (10334, 'United Package'), (10335, 'United Package'), (10336, 'United Package'), (10337, 'Federal Shipping'), (10338, 'Federal Shipping'), (10339, 'United Package'), (10340, 'Federal Shipping'), (10341, 'Federal Shipping'), (10342, 'United Package'), (10343, 'Speedy Express'), (10344, 'United Package'), (10345, 'United Package'), (10346, 'Federal Shipping'), (10347, 'Federal Shipping'), (10348, 'United Package'), (10349, 'Speedy Express'), (10350, 'United Package'), (10351, 'Speedy Express'), (10352, 'Federal Shipping'), (10353, 'Federal Shipping'), (10354, 'Federal Shipping'), (10355, 'Speedy Express'), (10356, 'United Package'), (10357, 'Federal Shipping'), (10358, 'Speedy Express'), (10359, 'Federal Shipping'), (10360, 'Federal Shipping'), (10361, 'United Package'), (10362, 'Speedy Express'), (10363, 'Federal Shipping'), (10364, 'Speedy Express'), (10365, 'United Package'), (10366, 'United Package'), (10367, 'Federal Shipping'), (10368, 'United Package'), (10369, 'United Package'), (10370, 'United Package'), (10371, 'Speedy Express'), (10372, 'United Package'), (10373, 'Federal Shipping'), (10374, 'Federal Shipping'), (10375, 'United Package'), (10376, 'United Package'), (10377, 'Federal Shipping'), (10378, 'Federal Shipping'), (10379, 'Speedy Express'), (10380, 'Federal Shipping'), (10381, 'Federal Shipping'), (10382, 'Speedy Express'), (10383, 'Federal Shipping'), (10384, 'Federal Shipping'), (10385, 'United Package'), (10386, 'Federal Shipping'), (10387, 'United Package'), (10388, 'Speedy Express'), (10389, 'United Package'), (10390, 'Speedy Express'), (10391, 'Federal Shipping'), (10392, 'Federal Shipping'), (10393, 'Federal Shipping'), (10394, 'Federal Shipping'), (10395, 'Speedy Express'), (10396, 'Federal Shipping'), (10397, 'Speedy Express'), (10398, 'Federal Shipping'), (10399, 'Federal Shipping'), (10400, 'Federal Shipping'), (10401, 'Speedy Express'), (10402, 'United Package'), (10403, 'Federal Shipping'), (10404, 'Speedy Express'), (10405, 'Speedy Express'), (10406, 'Speedy Express'), (10407, 'United Package'), (10408, 'Speedy Express'), (10409, 'Speedy Express'), (10410, 'Federal Shipping'), (10411, 'Federal Shipping'), (10412, 'United Package'), (10413, 'United Package'), (10414, 'Federal Shipping'), (10415, 'Speedy Express'), (10416, 'Federal Shipping'), (10417, 'Federal Shipping'), (10418, 'Speedy Express'), (10419, 'United Package'), (10420, 'Speedy Express'), (10421, 'Speedy Express'), (10422, 'Speedy Express'), (10423, 'Federal Shipping'), (10424, 'United Package'), (10425, 'United Package'), (10426, 'Speedy Express'), (10427, 'United Package'), (10428, 'Speedy Express'), (10429, 'United Package'), (10430, 'Speedy Express'), (10431, 'United Package'), (10432, 'United Package'), (10433, 'Federal Shipping'), (10434, 'United Package'), (10435, 'United Package'), (10436, 'United Package'), (10437, 'Speedy Express'), (10438, 'United Package'), (10439, 'Federal Shipping'), (10440, 'United Package'), (10441, 'United Package'), (10442, 'United Package'), (10443, 'Speedy Express'), (10444, 'Federal Shipping'), (10445, 'Speedy Express'), (10446, 'Speedy Express'), (10447, 'United Package'), (10448, 'United Package'), (10449, 'United Package'), (10450, 'United Package'), (10451, 'Federal Shipping'), (10452, 'Speedy Express'), (10453, 'United Package'), (10454, 'Federal Shipping'), (10455, 'United Package'), (10456, 'United Package'), (10457, 'Speedy Express'), (10458, 'Federal Shipping'), (10459, 'United Package'), (10460, 'Speedy Express'), (10461, 'Federal Shipping'), (10462, 'Speedy Express'), (10463, 'Federal Shipping'), (10464, 'United Package'), (10465, 'Federal Shipping'), (10466, 'Speedy Express'), (10467, 'United Package'), (10468, 'Federal Shipping'), (10469, 'Speedy Express'), (10470, 'United Package'), (10471, 'Federal Shipping'), (10472, 'Speedy Express'), (10473, 'Federal Shipping'), (10474, 'United Package'), (10475, 'Speedy Express'), (10476, 'Federal Shipping'), (10477, 'United Package'), (10478, 'Federal Shipping'), (10479, 'Federal Shipping'), (10480, 'United Package'), (10481, 'United Package'), (10482, 'Federal Shipping'), (10483, 'United Package'), (10484, 'Federal Shipping'), (10485, 'United Package'), (10486, 'United Package'), (10487, 'United Package'), (10488, 'United Package'), (10489, 'United Package'), (10490, 'United Package'), (10491, 'Federal Shipping'), (10492, 'Speedy Express'), (10493, 'Federal Shipping'), (10494, 'United Package'), (10495, 'Federal Shipping'), (10496, 'United Package'), (10497, 'Speedy Express'), (10498, 'United Package'), (10499, 'United Package'), (10500, 'Speedy Express'), (10501, 'Federal Shipping'), (10502, 'Speedy Express'), (10503, 'United Package'), (10504, 'Federal Shipping'), (10505, 'Federal Shipping'), (10506, 'United Package'), (10507, 'Speedy Express'), (10508, 'United Package'), (10509, 'Speedy Express'), (10510, 'Federal Shipping'), (10511, 'Federal Shipping'), (10512, 'United Package'), (10513, 'Speedy Express'), (10514, 'United Package'), (10515, 'Speedy Express'), (10516, 'Federal Shipping'), (10517, 'Federal Shipping'), (10518, 'United Package'), (10519, 'Federal Shipping'), (10520, 'Speedy Express'), (10521, 'United Package'), (10522, 'Speedy Express'), (10523, 'United Package'), (10524, 'United Package'), (10525, 'United Package'), (10526, 'United Package'), (10527, 'Speedy Express'), (10528, 'United Package'), (10529, 'United Package'), (10530, 'United Package'), (10531, 'Speedy Express'), (10532, 'Federal Shipping'), (10533, 'Speedy Express'), (10534, 'United Package'), (10535, 'Speedy Express'), (10536, 'United Package'), (10537, 'Speedy Express'), (10538, 'Federal Shipping'), (10539, 'Federal Shipping'), (10540, 'Federal Shipping'), (10541, 'Speedy Express'), (10542, 'Federal Shipping'), (10543, 'United Package'), (10544, 'Speedy Express'), (10545, 'United Package'), (10546, 'Federal Shipping'), (10547, 'United Package'), (10548, 'United Package'), (10549, 'Speedy Express'), (10550, 'Federal Shipping'), (10551, 'Federal Shipping'), (10552, 'Speedy Express'), (10553, 'United Package'), (10554, 'Federal Shipping'), (10555, 'Federal Shipping'), (10556, 'Speedy Express'), (10557, 'United Package'), (10558, 'United Package'), (10559, 'Speedy Express'), (10560, 'Speedy Express'), (10561, 'United Package'), (10562, 'Speedy Express'), (10563, 'United Package'), (10564, 'Federal Shipping'), (10565, 'United Package'), (10566, 'Speedy Express'), (10567, 'Speedy Express'), (10568, 'Federal Shipping'), (10569, 'Speedy Express'), (10570, 'Federal Shipping'), (10571, 'Federal Shipping'), (10572, 'United Package'), (10573, 'Federal Shipping'), (10574, 'United Package'), (10575, 'Speedy Express'), (10576, 'Federal Shipping'), (10577, 'United Package'), (10578, 'Federal Shipping'), (10579, 'United Package'), (10580, 'Federal Shipping'), (10581, 'Speedy Express'), (10582, 'United Package'), (10583, 'United Package'), (10584, 'Speedy Express'), (10585, 'Speedy Express'), (10586, 'Speedy Express'), (10587, 'Speedy Express'), (10588, 'Federal Shipping'), (10589, 'United Package'), (10590, 'Federal Shipping'), (10591, 'Speedy Express'), (10592, 'Speedy Express'), (10593, 'United Package'), (10594, 'United Package'), (10595, 'Speedy Express'), (10596, 'Speedy Express'), (10597, 'Federal Shipping'), (10598, 'Federal Shipping'), (10599, 'Federal Shipping'), (10600, 'Speedy Express'), (10601, 'Speedy Express'), (10602, 'United Package'), (10603, 'United Package'), (10604, 'Speedy Express'), (10605, 'United Package'), (10606, 'Federal Shipping'), (10607, 'Speedy Express'), (10608, 'United Package'), (10609, 'United Package'), (10610, 'Speedy Express'), (10611, 'United Package'), (10612, 'United Package'), (10613, 'United Package'), (10614, 'Federal Shipping'), (10615, 'Federal Shipping'), (10616, 'United Package'), (10617, 'United Package'), (10618, 'Speedy Express'), (10619, 'Federal Shipping'), (10620, 'Federal Shipping'), (10621, 'United Package'), (10622, 'Federal Shipping'), (10623, 'United Package'), (10624, 'United Package'), (10625, 'Speedy Express'), (10626, 'United Package'), (10627, 'Federal Shipping'), (10628, 'Federal Shipping'), (10629, 'Federal Shipping'), (10630, 'United Package'), (10631, 'Speedy Express'), (10632, 'Speedy Express'), (10633, 'Federal Shipping'), (10634, 'Federal Shipping'), (10635, 'Federal Shipping'), (10636, 'Speedy Express'), (10637, 'Speedy Express'), (10638, 'Speedy Express'), (10639, 'Federal Shipping'), (10640, 'Speedy Express'), (10641, 'United Package'), (10642, 'Federal Shipping'), (10643, 'Speedy Express'), (10644, 'United Package'), (10645, 'Speedy Express'), (10646, 'Federal Shipping'), (10647, 'United Package'), (10648, 'United Package'), (10649, 'Federal Shipping'), (10650, 'Federal Shipping'), (10651, 'United Package'), (10652, 'United Package'), (10653, 'Speedy Express'), (10654, 'Speedy Express'), (10655, 'United Package'), (10656, 'Speedy Express'), (10657, 'United Package'), (10658, 'Speedy Express'), (10659, 'United Package'), (10660, 'Speedy Express'), (10661, 'Federal Shipping'), (10662, 'United Package'), (10663, 'United Package'), (10664, 'Federal Shipping'), (10665, 'United Package'), (10666, 'United Package'), (10667, 'Speedy Express'), (10668, 'United Package'), (10669, 'Speedy Express'), (10670, 'Speedy Express'), (10671, 'Speedy Express'), (10672, 'United Package'), (10673, 'Speedy Express'), (10674, 'United Package'), (10675, 'United Package'), (10676, 'United Package'), (10677, 'Federal Shipping'), (10678, 'Federal Shipping'), (10679, 'Federal Shipping'), (10680, 'Speedy Express'), (10681, 'Federal Shipping'), (10682, 'United Package'), (10683, 'Speedy Express'), (10684, 'Speedy Express'), (10685, 'United Package'), (10686, 'Speedy Express'), (10687, 'United Package'), (10688, 'United Package'), (10689, 'United Package'), (10690, 'Speedy Express'), (10691, 'United Package'), (10692, 'United Package'), (10693, 'Federal Shipping'), (10694, 'Federal Shipping'), (10695, 'Speedy Express'), (10696, 'Federal Shipping'), (10697, 'Speedy Express'), (10698, 'Speedy Express'), (10699, 'Federal Shipping'), (10700, 'Speedy Express'), (10701, 'Federal Shipping'), (10702, 'Speedy Express'), (10703, 'United Package'), (10704, 'Speedy Express'), (10705, 'United Package'), (10706, 'Federal Shipping'), (10707, 'Federal Shipping'), (10708, 'United Package'), (10709, 'Federal Shipping'), (10710, 'Speedy Express'), (10711, 'United Package'), (10712, 'Speedy Express'), (10713, 'Speedy Express'), (10714, 'Federal Shipping'), (10715, 'Speedy Express'), (10716, 'United Package'), (10717, 'United Package'), (10718, 'Federal Shipping'), (10719, 'United Package'), (10720, 'United Package'), (10721, 'Federal Shipping'), (10722, 'Speedy Express'), (10723, 'Speedy Express'), (10724, 'United Package'), (10725, 'Federal Shipping'), (10726, 'Speedy Express'), (10727, 'Speedy Express'), (10728, 'United Package'), (10729, 'Federal Shipping'), (10730, 'Speedy Express'), (10731, 'Speedy Express'), (10732, 'Speedy Express'), (10733, 'Federal Shipping'), (10734, 'Federal Shipping'), (10735, 'United Package'), (10736, 'United Package'), (10737, 'United Package'), (10738, 'Speedy Express'), (10739, 'Federal Shipping'), (10740, 'United Package'), (10741, 'Federal Shipping'), (10742, 'Federal Shipping'), (10743, 'United Package'), (10744, 'Speedy Express'), (10745, 'Speedy Express'), (10746, 'Federal Shipping'), (10747, 'Speedy Express'), (10748, 'Speedy Express'), (10749, 'United Package'), (10750, 'Speedy Express'), (10751, 'Federal Shipping'), (10752, 'Federal Shipping'), (10753, 'Speedy Express'), (10754, 'Federal Shipping'), (10755, 'United Package'), (10756, 'United Package'), (10757, 'Speedy Express'), (10758, 'Federal Shipping'), (10759, 'Federal Shipping'), (10760, 'Speedy Express'), (10761, 'United Package'), (10762, 'Speedy Express'), (10763, 'Federal Shipping'), (10764, 'Federal Shipping'), (10765, 'Federal Shipping'), (10766, 'Speedy Express'), (10767, 'Federal Shipping'), (10768, 'United Package'), (10769, 'Speedy Express'), (10770, 'Federal Shipping'), (10771, 'United Package'), (10772, 'United Package'), (10773, 'Federal Shipping'), (10774, 'Speedy Express'), (10775, 'Speedy Express'), (10776, 'Federal Shipping'), (10777, 'United Package'), (10778, 'Speedy Express'), (10779, 'United Package'), (10780, 'Speedy Express'), (10781, 'Federal Shipping'), (10782, 'Federal Shipping'), (10783, 'United Package'), (10784, 'Federal Shipping'), (10785, 'Federal Shipping'), (10786, 'Speedy Express'), (10787, 'Speedy Express'), (10788, 'United Package'), (10789, 'United Package'), (10790, 'Speedy Express'), (10791, 'United Package'), (10792, 'Federal Shipping'), (10793, 'Federal Shipping'), (10794, 'Speedy Express'), (10795, 'United Package'), (10796, 'Speedy Express'), (10797, 'United Package'), (10798, 'Speedy Express'), (10799, 'Federal Shipping'), (10800, 'Federal Shipping'), (10801, 'United Package'), (10802, 'United Package'), (10803, 'Speedy Express'), (10804, 'United Package'), (10805, 'Federal Shipping'), (10806, 'United Package'), (10807, 'Speedy Express'), (10808, 'Federal Shipping'), (10809, 'Speedy Express'), (10810, 'Federal Shipping'), (10811, 'Speedy Express'), (10812, 'Speedy Express'), (10813, 'Speedy Express'), (10814, 'Federal Shipping'), (10815, 'Federal Shipping'), (10816, 'United Package'), (10817, 'United Package'), (10818, 'Federal Shipping'), (10819, 'Federal Shipping'), (10820, 'United Package'), (10821, 'Speedy Express'), (10822, 'Federal Shipping'), (10823, 'United Package'), (10824, 'Speedy Express'), (10825, 'Speedy Express'), (10826, 'Speedy Express'), (10827, 'United Package'), (10828, 'Speedy Express'), (10829, 'Speedy Express'), (10830, 'United Package'), (10831, 'United Package'), (10832, 'United Package'), (10833, 'United Package'), (10834, 'Federal Shipping'), (10835, 'Federal Shipping'), (10836, 'Speedy Express'), (10837, 'Federal Shipping'), (10838, 'Federal Shipping'), (10839, 'Federal Shipping'), (10840, 'United Package'), (10841, 'United Package'), (10842, 'Federal Shipping'), (10843, 'United Package'), (10844, 'United Package'), (10845, 'Speedy Express'), (10846, 'Federal Shipping'), (10847, 'Federal Shipping'), (10848, 'United Package'), (10849, 'United Package'), (10850, 'Speedy Express'), (10851, 'Speedy Express'), (10852, 'Speedy Express'), (10853, 'United Package'), (10854, 'United Package'), (10855, 'Speedy Express'), (10856, 'United Package'), (10857, 'United Package'), (10858, 'Speedy Express'), (10859, 'United Package'), (10860, 'Federal Shipping'), (10861, 'United Package'), (10862, 'United Package'), (10863, 'United Package'), (10864, 'United Package'), (10865, 'Speedy Express'), (10866, 'Speedy Express'), (10867, 'Speedy Express'), (10868, 'United Package'), (10869, 'Speedy Express'), (10870, 'Federal Shipping'), (10871, 'United Package'), (10872, 'United Package'), (10873, 'Speedy Express'), (10874, 'United Package'), (10875, 'United Package'), (10876, 'Federal Shipping'), (10877, 'Speedy Express'), (10878, 'Speedy Express'), (10879, 'Federal Shipping'), (10880, 'Speedy Express'), (10881, 'Speedy Express'), (10882, 'Federal Shipping'), (10883, 'Federal Shipping'), (10884, 'United Package'), (10885, 'Federal Shipping'), (10886, 'Speedy Express'), (10887, 'Federal Shipping'), (10888, 'United Package'), (10889, 'Federal Shipping'), (10890, 'Speedy Express'), (10891, 'United Package'), (10892, 'United Package'), (10893, 'United Package'), (10894, 'Speedy Express'), (10895, 'Speedy Express'), (10896, 'Federal Shipping'), (10897, 'United Package'), (10898, 'United Package'), (10899, 'Federal Shipping'), (10900, 'United Package'), (10901, 'Speedy Express'), (10902, 'Speedy Express'), (10903, 'Federal Shipping'), (10904, 'Federal Shipping'), (10905, 'United Package'), (10906, 'Federal Shipping'), (10907, 'Federal Shipping'), (10908, 'United Package'), (10909, 'United Package'), (10910, 'Federal Shipping'), (10911, 'Speedy Express'), (10912, 'United Package'), (10913, 'Speedy Express'), (10914, 'Speedy Express'), (10915, 'United Package'), (10916, 'United Package'), (10917, 'United Package'), (10918, 'Federal Shipping'), (10919, 'United Package'), (10920, 'United Package'), (10921, 'Speedy Express'), (10922, 'Federal Shipping'), (10923, 'Federal Shipping'), (10924, 'United Package'), (10925, 'Speedy Express'), (10926, 'Federal Shipping'), (10927, 'Speedy Express'), (10928, 'Speedy Express'), (10929, 'Speedy Express'), (10930, 'Federal Shipping'), (10931, 'United Package'), (10932, 'Speedy Express'), (10933, 'Federal Shipping'), (10934, 'Federal Shipping'), (10935, 'Federal Shipping'), (10936, 'United Package'), (10937, 'Federal Shipping'), (10938, 'United Package'), (10939, 'United Package'), (10940, 'Federal Shipping'), (10941, 'United Package'), (10942, 'Federal Shipping'), (10943, 'United Package'), (10944, 'Federal Shipping'), (10945, 'Speedy Express'), (10946, 'United Package'), (10947, 'United Package'), (10948, 'Federal Shipping'), (10949, 'Federal Shipping'), (10950, 'United Package'), (10951, 'United Package'), (10952, 'Speedy Express'), (10953, 'United Package'), (10954, 'Speedy Express'), (10955, 'United Package'), (10956, 'United Package'), (10957, 'Federal Shipping'), (10958, 'United Package'), (10959, 'United Package'), (10960, 'Speedy Express'), (10961, 'Speedy Express'), (10962, 'United Package'), (10963, 'Federal Shipping'), (10964, 'United Package'), (10965, 'Federal Shipping'), (10966, 'Speedy Express'), (10967, 'United Package'), (10968, 'Federal Shipping'), (10969, 'United Package'), (10970, 'Speedy Express'), (10971, 'United Package'), (10972, 'United Package'), (10973, 'United Package'), (10974, 'Federal Shipping'), (10975, 'Federal Shipping'), (10976, 'Speedy Express'), (10977, 'Federal Shipping'), (10978, 'United Package'), (10979, 'United Package'), (10980, 'Speedy Express'), (10981, 'United Package'), (10982, 'Speedy Express'), (10983, 'United Package'), (10984, 'Federal Shipping'), (10985, 'Speedy Express'), (10986, 'United Package'), (10987, 'Speedy Express'), (10988, 'United Package'), (10989, 'Speedy Express'), (10990, 'Federal Shipping'), (10991, 'Speedy Express'), (10992, 'Federal Shipping'), (10993, 'Federal Shipping'), (10994, 'Federal Shipping'), (10995, 'Federal Shipping'), (10996, 'United Package'), (10997, 'United Package'), (10998, 'United Package'), (10999, 'United Package'), (11000, 'Federal Shipping'), (11001, 'United Package'), (11002, 'Speedy Express'), (11003, 'Federal Shipping'), (11004, 'Speedy Express'), (11005, 'Speedy Express'), (11006, 'United Package'), (11007, 'United Package'), (11008, 'Federal Shipping'), (11009, 'Speedy Express'), (11010, 'United Package'), (11011, 'Speedy Express'), (11012, 'Federal Shipping'), (11013, 'Speedy Express'), (11014, 'Federal Shipping'), (11015, 'United Package'), (11016, 'United Package'), (11017, 'United Package'), (11018, 'United Package'), (11019, 'Federal Shipping'), (11020, 'United Package'), (11021, 'Speedy Express'), (11022, 'United Package'), (11023, 'United Package'), (11024, 'Speedy Express'), (11025, 'Federal Shipping'), (11026, 'Speedy Express'), (11027, 'Speedy Express'), (11028, 'Speedy Express'), (11029, 'Speedy Express'), (11030, 'United Package'), (11031, 'United Package'), (11032, 'Federal Shipping'), (11033, 'Federal Shipping'), (11034, 'Speedy Express'), (11035, 'United Package'), (11036, 'Federal Shipping'), (11037, 'Speedy Express'), (11038, 'United Package'), (11039, 'United Package'), (11040, 'Federal Shipping'), (11041, 'United Package'), (11042, 'Speedy Express'), (11043, 'United Package'), (11044, 'Speedy Express'), (11045, 'United Package'), (11046, 'United Package'), (11047, 'Federal Shipping'), (11048, 'Federal Shipping'), (11049, 'Speedy Express'), (11050, 'United Package'), (11051, 'Federal Shipping'), (11052, 'Speedy Express'), (11053, 'United Package'), (11054, 'Speedy Express'), (11055, 'United Package'), (11056, 'United Package'), (11057, 'Federal Shipping'), (11058, 'Federal Shipping'), (11059, 'United Package'), (11060, 'United Package'), (11061, 'Federal Shipping'), (11062, 'United Package'), (11063, 'United Package'), (11064, 'Speedy Express'), (11065, 'Speedy Express'), (11066, 'United Package'), (11067, 'United Package'), (11068, 'United Package'), (11069, 'United Package'), (11070, 'Speedy Express'), (11071, 'Speedy Express'), (11072, 'United Package'), (11073, 'United Package'), (11074, 'United Package'), (11075, 'United Package'), (11076, 'United Package'), (11077, 'United Package')]
+    Status: ✅ Success
+    Tokens: total=1094  input=1052  output=42
+------------------------------------------------------------
+
+[5] Q: ผู้จัดจำหน่ายรายไหนทำรายได้ให้บริษัทมากที่สุด
+    Retrieved: suppliers, customers, products, employees, orders
+    SQL:
+SELECT
+  s.company_name
+FROM suppliers AS s
+JOIN products AS p
+  ON s.supplier_id = p.supplier_id
+JOIN order_details AS od
+  ON p.product_id = od.product_id
+GROUP BY
+  s.company_name
+ORDER BY
+  SUM(od.quantity * od.unit_price) DESC
+LIMIT 1;
+    Result: [('Aux joyeux ecclésiastiques',)]
+    Status: ✅ Success
+    Tokens: total=1480  input=1389  output=91
+------------------------------------------------------------
+
+[6] Q: สินค้าแต่ละชิ้นถูกสั่งซื้อไปกี่ครั้ง
+    Retrieved: order_details, products, customers, orders, catarories
+    SQL:
+SELECT
+  product_id,
+  COUNT(order_id)
+FROM order_details
+GROUP BY
+  product_id;
+    Result: [(74, 13), (54, 36), (29, 32), (71, 42), (4, 20), (68, 34), (34, 19), (51, 39), (52, 29), (70, 39), (67, 10), (63, 17), (10, 33), (35, 36), (45, 14), (6, 12), (39, 30), (69, 31), (36, 31), (31, 51), (50, 10), (60, 51), (14, 22), (66, 8), (22, 14), (59, 54), (13, 40), (65, 32), (2, 44), (16, 43), (62, 48), (75, 46), (73, 14), (44, 24), (11, 38), (42, 30), (41, 47), (46, 27), (40, 41), (43, 28), (32, 15), (53, 30), (9, 5), (7, 29), (38, 24), (15, 6), (48, 6), (26, 32), (12, 14), (72, 38), (24, 51), (57, 23), (61, 24), (19, 37), (77, 38), (25, 18), (30, 32), (21, 39), (49, 21), (47, 21), (3, 12), (17, 37), (28, 33), (37, 6), (20, 16), (33, 32), (1, 38), (76, 39), (5, 10), (18, 27), (64, 30), (55, 33), (27, 9), (23, 20), (56, 50), (58, 18), (8, 13)]
+    Status: ✅ Success
+    Tokens: total=1051  input=1017  output=34
+------------------------------------------------------------
+
+[7] Q: คำสั่งซื้อแต่ละรายการส่งไปประเทศไหน และเป็นของลูกค้าคนใด
+    Retrieved: orders, customers, order_details, shippers, suppliers
+    SQL:
+SELECT
+  o.ship_country,
+  c.company_name
+FROM orders AS o
+JOIN customers AS c
+  ON o.customer_id = c.customer_id;
+    Result: [('France', 'Vins et alcools Chevalier'), ('Germany', 'Toms Spezialitäten'), ('Brazil', 'Hanari Carnes'), ('France', 'Victuailles en stock'), ('Belgium', 'Suprêmes délices'), ('Brazil', 'Hanari Carnes'), ('Switzerland', 'Chop-suey Chinese'), ('Switzerland', 'Richter Supermarkt'), ('Brazil', 'Wellington Importadora'), ('Venezuela', 'HILARION-Abastos'), ('Austria', 'Ernst Handel'), ('Mexico', 'Centro comercial Moctezuma'), ('Germany', 'Ottilies Käseladen'), ('Brazil', 'Que Delícia'), ('USA', 'Rattlesnake Canyon Grocery'), ('Austria', 'Ernst Handel'), ('Sweden', 'Folk och fä HB'), ('France', 'Blondesddsl père et fils'), ('Finland', 'Wartian Herkku'), ('Germany', 'Frankenversand'), ('Venezuela', 'GROSELLA-Restaurante'), ('USA', 'White Clover Markets'), ('Finland', 'Wartian Herkku'), ('USA', 'Split Rail Beer & Ale'), ('USA', 'Rattlesnake Canyon Grocery'), ('Germany', 'QUICK-Stop'), ('France', 'Vins et alcools Chevalier'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Mexico', 'Tortuga Restaurante'), ('Germany', 'Morgenstern Gesundkost'), ('Sweden', 'Berglunds snabbköp'), ('Germany', 'Lehmanns Marktstand'), ('Sweden', 'Berglunds snabbköp'), ('Spain', 'Romero y tomillo'), ('Spain', 'Romero y tomillo'), ('Venezuela', 'LILA-Supermercado'), ('Germany', 'Lehmanns Marktstand'), ('Germany', 'QUICK-Stop'), ('Germany', 'QUICK-Stop'), ('Brazil', 'Ricardo Adocicados'), ('Italy', 'Reggiani Caseifici'), ('UK', "B's Beverages"), ('Brazil', 'Comércio Mineiro'), ('Brazil', 'Que Delícia'), ('Brazil', 'Tradição Hipermercados'), ('Mexico', 'Tortuga Restaurante'), ('USA', 'Rattlesnake Canyon Grocery'), ('France', 'Vins et alcools Chevalier'), ('Venezuela', 'LILA-Supermercado'), ('France', 'Blondesddsl père et fils'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Brazil', 'Ricardo Adocicados'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Germany', 'Die Wandernde Kuh'), ('Belgium', 'Suprêmes délices'), ('Spain', 'Godos Cocina Típica'), ('Mexico', 'Tortuga Restaurante'), ('USA', 'Old World Delicatessen'), ('Spain', 'Romero y tomillo'), ('USA', 'Lonesome Pine Restaurant'), ('Mexico', 'Ana Trujillo Emparedados y helados'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('USA', 'The Big Cheese'), ('France', 'Du monde entier'), ('Germany', 'Die Wandernde Kuh'), ('Germany', 'QUICK-Stop'), ('USA', 'Rattlesnake Canyon Grocery'), ('UK', 'Island Trading'), ('USA', 'Rattlesnake Canyon Grocery'), ('USA', 'Lonesome Pine Restaurant'), ('UK', 'Island Trading'), ('Mexico', 'Tortuga Restaurante'), ('Finland', 'Wartian Herkku'), ('UK', 'Island Trading'), ('Mexico', 'Pericles Comidas clásicas'), ('Germany', 'Königlich Essen'), ('USA', 'Save-a-lot Markets'), ('Germany', 'Königlich Essen'), ('Spain', 'Bólido Comidas preparadas'), ('Sweden', 'Folk och fä HB'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('USA', 'Split Rail Beer & Ale'), ('Venezuela', 'LILA-Supermercado'), ('France', "Bon app'"), ('Canada', 'Mère Paillarde'), ('Finland', 'Wartian Herkku'), ('France', 'Victuailles en stock'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Portugal', 'Princesa Isabel Vinhos'), ('Germany', 'Frankenversand'), ('USA', 'Old World Delicatessen'), ('Canada', 'Mère Paillarde'), ('France', "Bon app'"), ('Denmark', 'Simons bistro'), ('Germany', 'Frankenversand'), ('Germany', 'Lehmanns Marktstand'), ('USA', 'White Clover Markets'), ('Germany', 'QUICK-Stop'), ('USA', 'Rattlesnake Canyon Grocery'), ('Brazil', 'Familia Arquibaldo'), ('Germany', 'Die Wandernde Kuh'), ('USA', 'Split Rail Beer & Ale'), ('France', "La maison d'Asie"), ('Austria', 'Ernst Handel'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('Austria', 'Piccolo und mehr'), ('Mexico', 'Pericles Comidas clásicas'), ('UK', 'Around the Horn'), ('Germany', 'Die Wandernde Kuh'), ('Venezuela', 'LILA-Supermercado'), ('France', "La maison d'Asie"), ('UK', 'Seven Seas Imports'), ('France', 'Blondesddsl père et fils'), ('Germany', 'QUICK-Stop'), ('France', "Bon app'"), ('Germany', 'Drachenblut Delikatessen'), ('UK', 'Eastern Connection'), ('Mexico', 'Antonio Moreno Taquería'), ('Spain', 'Galería del gastrónomo'), ('Denmark', 'Vaffeljernet'), ('Austria', 'Ernst Handel'), ('USA', 'Split Rail Beer & Ale'), ('Switzerland', 'Chop-suey Chinese'), ('France', "La maison d'Asie"), ('Brazil', 'Queen Cozinha'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Poland', 'Wolski  Zajazd'), ('USA', 'Hungry Coyote Import Store'), ('Canada', 'Mère Paillarde'), ('UK', 'Seven Seas Imports'), ('Sweden', 'Folk och fä HB'), ('Brazil', 'Que Delícia'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Venezuela', 'LILA-Supermercado'), ('Austria', 'Ernst Handel'), ('UK', 'Around the Horn'), ('Sweden', 'Berglunds snabbköp'), ('USA', 'Split Rail Beer & Ale'), ('Brazil', 'Familia Arquibaldo'), ('Norway', 'Santé Gourmet'), ('UK', 'Seven Seas Imports'), ('Canada', 'Bottom-Dollar Markets'), ('Austria', 'Ernst Handel'), ('Germany', 'Drachenblut Delikatessen'), ('Austria', 'Piccolo und mehr'), ('USA', 'Save-a-lot Markets'), ('USA', 'Hungry Coyote Import Store'), ('Venezuela', 'HILARION-Abastos'), ('Germany', 'Frankenversand'), ('Portugal', 'Princesa Isabel Vinhos'), ('USA', 'Save-a-lot Markets'), ('Denmark', 'Vaffeljernet'), ('UK', 'Eastern Connection'), ('USA', 'Rattlesnake Canyon Grocery'), ('Austria', 'Ernst Handel'), ('Austria', 'Ernst Handel'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Venezuela', 'LINO-Delicateses'), ('Brazil', 'Queen Cozinha'), ('Germany', 'Ottilies Käseladen'), ('France', 'Folies gourmandes'), ('Argentina', 'Océano Atlántico Ltda.'), ('Canada', 'Bottom-Dollar Markets'), ('Canada', 'Bottom-Dollar Markets'), ('Finland', 'Wartian Herkku'), ('France', "La maison d'Asie"), ('Brazil', 'Familia Arquibaldo'), ('USA', 'Hungry Coyote Import Store'), ('Finland', 'Wartian Herkku'), ('Denmark', 'Simons bistro'), ('Germany', 'QUICK-Stop'), ('Switzerland', 'Richter Supermarkt'), ('Brazil', 'Wellington Importadora'), ('Brazil', 'Que Delícia'), ('Italy', 'Franchi S.p.A.'), ('Brazil', 'Gourmet Lanchonetes'), ('Canada', 'Mère Paillarde'), ('France', "La maison d'Asie"), ('Spain', 'Galería del gastrónomo'), ('Austria', 'Piccolo und mehr'), ('Italy', 'Reggiani Caseifici'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Austria', 'Ernst Handel'), ('Canada', 'Bottom-Dollar Markets'), ('USA', 'Split Rail Beer & Ale'), ('Portugal', 'Princesa Isabel Vinhos'), ('Sweden', 'Folk och fä HB'), ('UK', 'Consolidated Holdings'), ('France', 'Blondesddsl père et fils'), ('Finland', 'Wartian Herkku'), ('Germany', 'Toms Spezialitäten'), ('Canada', 'Mère Paillarde'), ('USA', 'Save-a-lot Markets'), ('USA', 'Old World Delicatessen'), ('Austria', 'Ernst Handel'), ('Italy', 'Reggiani Caseifici'), ('Sweden', 'Berglunds snabbköp'), ('Sweden', 'Berglunds snabbköp'), ('Germany', 'Toms Spezialitäten'), ('Brazil', 'Ricardo Adocicados'), ('Argentina', 'Rancho grande'), ('France', 'Blondesddsl père et fils'), ('France', 'Victuailles en stock'), ('Germany', 'QUICK-Stop'), ('USA', 'Save-a-lot Markets'), ('UK', 'Around the Horn'), ('France', "La maison d'Asie"), ('Finland', 'Wartian Herkku'), ('Germany', 'Königlich Essen'), ('Germany', 'Königlich Essen'), ('Belgium', 'Suprêmes délices'), ('France', 'Victuailles en stock'), ('Sweden', 'Folk och fä HB'), ('Venezuela', 'LILA-Supermercado'), ('UK', 'Consolidated Holdings'), ('Belgium', 'Suprêmes délices'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('Denmark', 'Vaffeljernet'), ('Brazil', 'Comércio Mineiro'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Germany', 'Königlich Essen'), ('USA', 'White Clover Markets'), ('France', "Bon app'"), ('UK', "B's Beverages"), ('UK', 'Seven Seas Imports'), ('UK', 'Island Trading'), ('Mexico', 'Pericles Comidas clásicas'), ('Belgium', 'Suprêmes délices'), ('Venezuela', 'HILARION-Abastos'), ('Portugal', 'Princesa Isabel Vinhos'), ('France', 'Victuailles en stock'), ('USA', 'Rattlesnake Canyon Grocery'), ('France', 'Folies gourmandes'), ('Brazil', 'Ricardo Adocicados'), ('USA', 'Lazy K Kountry Store'), ('USA', 'White Clover Markets'), ('UK', "B's Beverages"), ('Venezuela', 'LINO-Delicateses'), ('Venezuela', 'HILARION-Abastos'), ('Brazil', 'Queen Cozinha'), ('Germany', 'Frankenversand'), ('Austria', 'Piccolo und mehr'), ('Venezuela', 'HILARION-Abastos'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('Canada', 'Bottom-Dollar Markets'), ('France', "La maison d'Asie"), ('Brazil', 'Comércio Mineiro'), ('Canada', 'Laughing Bacchus Wine Cellars'), ('Brazil', 'Tradição Hipermercados'), ('Germany', 'Lehmanns Marktstand'), ('Venezuela', 'HILARION-Abastos'), ('Venezuela', 'LILA-Supermercado'), ('France', "La maison d'Asie"), ('Germany', 'Blauer See Delikatessen'), ('Mexico', 'Pericles Comidas clásicas'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('USA', 'White Clover Markets'), ('Canada', 'Mère Paillarde'), ('Germany', 'Königlich Essen'), ('Mexico', 'Antonio Moreno Taquería'), ('Germany', 'Ottilies Käseladen'), ('Germany', 'Blauer See Delikatessen'), ('USA', 'Save-a-lot Markets'), ('France', "Bon app'"), ('Brazil', 'Familia Arquibaldo'), ('Germany', 'Die Wandernde Kuh'), ('Austria', 'Ernst Handel'), ('Germany', 'QUICK-Stop'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('UK', 'North/South'), ('Mexico', 'Tortuga Restaurante'), ('Switzerland', 'Chop-suey Chinese'), ('Norway', 'Santé Gourmet'), ('Argentina', 'Cactus Comidas para llevar'), ('Germany', 'Lehmanns Marktstand'), ('UK', 'Seven Seas Imports'), ('Sweden', 'Berglunds snabbköp'), ('France', "Bon app'"), ('Finland', 'Wartian Herkku'), ('Germany', 'QUICK-Stop'), ('USA', 'Great Lakes Food Market'), ('Belgium', 'Maison Dewey'), ('Austria', 'Piccolo und mehr'), ('Argentina', 'Océano Atlántico Ltda.'), ('UK', 'Eastern Connection'), ('Sweden', 'Folk och fä HB'), ('Germany', 'Lehmanns Marktstand'), ('Mexico', 'Antonio Moreno Taquería'), ('Germany', 'Lehmanns Marktstand'), ('Switzerland', 'Richter Supermarkt'), ('UK', "B's Beverages"), ('UK', "B's Beverages"), ('Germany', 'QUICK-Stop'), ('Brazil', 'Hanari Carnes'), ('Germany', 'Königlich Essen'), ('Venezuela', 'LILA-Supermercado'), ('USA', 'Lonesome Pine Restaurant'), ('USA', 'Lazy K Kountry Store'), ('France', 'Victuailles en stock'), ('UK', 'Seven Seas Imports'), ('Germany', 'Toms Spezialitäten'), ('Germany', 'QUICK-Stop'), ('Spain', 'Godos Cocina Típica'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('Venezuela', 'HILARION-Abastos'), ('Finland', 'Wartian Herkku'), ('Germany', 'Ottilies Käseladen'), ('USA', 'Save-a-lot Markets'), ('Denmark', 'Simons bistro'), ('Germany', 'Lehmanns Marktstand'), ('UK', 'Around the Horn'), ('France', 'Blondesddsl père et fils'), ('Germany', 'Frankenversand'), ('Sweden', 'Folk och fä HB'), ('Italy', 'Reggiani Caseifici'), ('Brazil', 'Ricardo Adocicados'), ('USA', 'Rattlesnake Canyon Grocery'), ('Canada', 'Mère Paillarde'), ('France', 'Blondesddsl père et fils'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Spain', 'Galería del gastrónomo'), ('USA', 'Rattlesnake Canyon Grocery'), ('Canada', 'Mère Paillarde'), ('Austria', 'Ernst Handel'), ('Sweden', 'Berglunds snabbköp'), ('Mexico', 'Antonio Moreno Taquería'), ('USA', "Trail's Head Gourmet Provisioners"), ('Germany', 'Morgenstern Gesundkost'), ('Mexico', 'Tortuga Restaurante'), ('USA', "Trail's Head Gourmet Provisioners"), ('UK', "B's Beverages"), ('USA', "Let's Stop N Shop"), ('Germany', 'Ottilies Käseladen'), ('Brazil', 'Familia Arquibaldo'), ('Germany', 'Blauer See Delikatessen'), ('Finland', 'Wartian Herkku'), ('France', 'Blondesddsl père et fils'), ('Brazil', 'Wellington Importadora'), ('Italy', 'Reggiani Caseifici'), ('Brazil', 'Que Delícia'), ('Germany', 'QUICK-Stop'), ('USA', 'Great Lakes Food Market'), ('Canada', 'Mère Paillarde'), ('Denmark', 'Vaffeljernet'), ('Germany', 'Lehmanns Marktstand'), ('Germany', 'Lehmanns Marktstand'), ('USA', 'Old World Delicatessen'), ('Austria', 'Ernst Handel'), ('USA', 'White Clover Markets'), ('Austria', 'Piccolo und mehr'), ('USA', 'Rattlesnake Canyon Grocery'), ('UK', "B's Beverages"), ('USA', 'Hungry Coyote Import Store'), ('Venezuela', 'HILARION-Abastos'), ('Denmark', 'Vaffeljernet'), ('USA', 'Save-a-lot Markets'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('Canada', 'Mère Paillarde'), ('Brazil', 'Tradição Hipermercados'), ('USA', 'Save-a-lot Markets'), ('Germany', 'Toms Spezialitäten'), ('France', 'Du monde entier'), ('France', "La maison d'Asie"), ('Poland', 'Wolski  Zajazd'), ('USA', 'Save-a-lot Markets'), ('Venezuela', 'HILARION-Abastos'), ('Germany', 'Blauer See Delikatessen'), ('Finland', 'Wilman Kala'), ('USA', 'Great Lakes Food Market'), ('USA', 'Great Lakes Food Market'), ('Canada', 'Mère Paillarde'), ('Canada', 'Mère Paillarde'), ('Canada', 'Laughing Bacchus Wine Cellars'), ('UK', 'Island Trading'), ('Brazil', 'Ricardo Adocicados'), ('Germany', 'Frankenversand'), ('USA', 'The Cracker Box'), ('Mexico', 'Ana Trujillo Emparedados y helados'), ('Sweden', 'Berglunds snabbköp'), ('USA', 'Save-a-lot Markets'), ('France', 'Blondesddsl père et fils'), ('Spain', 'Godos Cocina Típica'), ('Germany', 'Königlich Essen'), ('France', "La maison d'Asie"), ('Germany', 'Die Wandernde Kuh'), ('Austria', 'Ernst Handel'), ('France', 'Folies gourmandes'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Finland', 'Wartian Herkku'), ('Brazil', 'Queen Cozinha'), ('Venezuela', 'LINO-Delicateses'), ('Norway', 'Santé Gourmet'), ('Germany', 'Die Wandernde Kuh'), ('Venezuela', 'HILARION-Abastos'), ('Denmark', 'Simons bistro'), ('Germany', 'Alfreds Futterkiste'), ('Brazil', 'Wellington Importadora'), ('Brazil', 'Hanari Carnes'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Brazil', 'Que Delícia'), ('Brazil', 'Ricardo Adocicados'), ('Belgium', 'Maison Dewey'), ('Brazil', 'Familia Arquibaldo'), ('Germany', 'Die Wandernde Kuh'), ('Brazil', 'Gourmet Lanchonetes'), ('Germany', 'Frankenversand'), ('Sweden', 'Berglunds snabbköp'), ('Italy', 'Reggiani Caseifici'), ('USA', 'Great Lakes Food Market'), ('USA', 'Save-a-lot Markets'), ('Germany', 'QUICK-Stop'), ('Brazil', 'Queen Cozinha'), ('USA', 'Hungry Coyote Import Store'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('USA', 'Lonesome Pine Restaurant'), ('France', "Bon app'"), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('USA', 'Lonesome Pine Restaurant'), ('Switzerland', 'Richter Supermarkt'), ('Austria', 'Ernst Handel'), ('Germany', 'Die Wandernde Kuh'), ('Denmark', 'Simons bistro'), ('Germany', 'Frankenversand'), ('France', 'France restauration'), ('Sweden', 'Berglunds snabbköp'), ('Finland', 'Wilman Kala'), ('UK', 'Island Trading'), ('Germany', 'Frankenversand'), ('Mexico', 'Tortuga Restaurante'), ('Mexico', 'Antonio Moreno Taquería'), ('USA', 'Save-a-lot Markets'), ('France', 'Blondesddsl père et fils'), ('USA', 'Old World Delicatessen'), ('USA', 'Great Lakes Food Market'), ('Mexico', 'Antonio Moreno Taquería'), ('France', 'Du monde entier'), ('Germany', 'Ottilies Käseladen'), ('Brazil', 'Gourmet Lanchonetes'), ('Austria', 'Piccolo und mehr'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Denmark', 'Vaffeljernet'), ('Sweden', 'Berglunds snabbköp'), ('Brazil', 'Hanari Carnes'), ('Germany', 'QUICK-Stop'), ('Germany', 'Alfreds Futterkiste'), ('USA', 'White Clover Markets'), ('Germany', 'QUICK-Stop'), ('Finland', 'Wilman Kala'), ('USA', 'White Clover Markets'), ('Venezuela', 'LINO-Delicateses'), ('Austria', 'Ernst Handel'), ('Germany', 'Morgenstern Gesundkost'), ('USA', 'Save-a-lot Markets'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Germany', 'Alfreds Futterkiste'), ('Sweden', 'Folk och fä HB'), ('Brazil', 'Queen Cozinha'), ('Venezuela', 'HILARION-Abastos'), ('USA', 'Old World Delicatessen'), ('UK', 'Around the Horn'), ('USA', 'The Big Cheese'), ('Brazil', 'Gourmet Lanchonetes'), ('Italy', 'Franchi S.p.A.'), ('USA', 'Save-a-lot Markets'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('USA', 'Save-a-lot Markets'), ('USA', 'Save-a-lot Markets'), ('France', "Bon app'"), ('Argentina', 'Rancho grande'), ('Germany', 'Frankenversand'), ('Germany', 'Königlich Essen'), ('USA', "Let's Stop N Shop"), ('Brazil', 'Que Delícia'), ('Germany', 'QUICK-Stop'), ('USA', 'Save-a-lot Markets'), ('USA', 'White Clover Markets'), ('Canada', 'Mère Paillarde'), ('Brazil', 'Familia Arquibaldo'), ('UK', 'Eastern Connection'), ('Italy', 'Reggiani Caseifici'), ('Brazil', 'Queen Cozinha'), ('Venezuela', 'LINO-Delicateses'), ('France', "Bon app'"), ('Switzerland', 'Chop-suey Chinese'), ('France', "Bon app'"), ('Sweden', 'Berglunds snabbköp'), ('Brazil', 'Gourmet Lanchonetes'), ('USA', "Let's Stop N Shop"), ('Ireland', 'Hungry Owl All-Night Grocers'), ('France', 'Vins et alcools Chevalier'), ('France', 'Spécialités du monde'), ('France', 'Vins et alcools Chevalier'), ('USA', 'White Clover Markets'), ('UK', 'Around the Horn'), ('Canada', 'Bottom-Dollar Markets'), ('UK', 'Around the Horn'), ('Denmark', 'Vaffeljernet'), ('Germany', 'QUICK-Stop'), ('Switzerland', 'Chop-suey Chinese'), ('Austria', 'Piccolo und mehr'), ('USA', 'Save-a-lot Markets'), ('UK', 'Island Trading'), ('Finland', 'Wartian Herkku'), ('Switzerland', 'Richter Supermarkt'), ('UK', 'North/South'), ('Italy', 'Franchi S.p.A.'), ('Italy', 'Magazzini Alimentari Riuniti'), ('France', "Bon app'"), ('USA', 'Split Rail Beer & Ale'), ('USA', 'Save-a-lot Markets'), ('Switzerland', 'Richter Supermarkt'), ('Mexico', 'Ana Trujillo Emparedados y helados'), ('Belgium', 'Maison Dewey'), ('USA', 'Rattlesnake Canyon Grocery'), ('Sweden', 'Folk och fä HB'), ('France', 'Folies gourmandes'), ('Austria', 'Ernst Handel'), ('Germany', 'QUICK-Stop'), ('Germany', 'Ottilies Käseladen'), ('Belgium', 'Suprêmes délices'), ('UK', 'Around the Horn'), ('Denmark', 'Vaffeljernet'), ('Brazil', 'Hanari Carnes'), ('Austria', 'Ernst Handel'), ('Germany', 'Lehmanns Marktstand'), ('Austria', 'Ernst Handel'), ('Sweden', 'Folk och fä HB'), ('USA', 'The Cracker Box'), ('Austria', 'Ernst Handel'), ('Brazil', 'Gourmet Lanchonetes'), ('Sweden', 'Berglunds snabbköp'), ('Germany', 'Morgenstern Gesundkost'), ('Venezuela', 'LILA-Supermercado'), ('Finland', 'Wartian Herkku'), ('Argentina', 'Cactus Comidas para llevar'), ('Brazil', 'Hanari Carnes'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Venezuela', 'GROSELLA-Restaurante'), ('Brazil', 'Queen Cozinha'), ('France', "La maison d'Asie"), ('Germany', 'QUICK-Stop'), ('France', 'Folies gourmandes'), ('Brazil', 'Gourmet Lanchonetes'), ('Germany', 'Frankenversand'), ('Poland', 'Wolski  Zajazd'), ('UK', 'Around the Horn'), ('Brazil', 'Que Delícia'), ('Austria', 'Ernst Handel'), ('Venezuela', 'HILARION-Abastos'), ('Germany', 'Drachenblut Delikatessen'), ('UK', 'Island Trading'), ('Germany', 'Königlich Essen'), ('UK', 'Seven Seas Imports'), ('Spain', 'Bólido Comidas preparadas'), ('Denmark', 'Simons bistro'), ('Brazil', 'Wellington Importadora'), ('UK', 'Seven Seas Imports'), ('USA', 'The Big Cheese'), ('France', 'Victuailles en stock'), ('Italy', 'Franchi S.p.A.'), ('USA', 'Old World Delicatessen'), ('Brazil', 'Wellington Importadora'), ('Canada', 'Laughing Bacchus Wine Cellars'), ('Venezuela', 'LINO-Delicateses'), ('Italy', 'Reggiani Caseifici'), ('Brazil', 'Ricardo Adocicados'), ('France', 'Victuailles en stock'), ('USA', 'Save-a-lot Markets'), ('USA', 'Great Lakes Food Market'), ('Germany', 'Königlich Essen'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Argentina', 'Cactus Comidas para llevar'), ('USA', 'Rattlesnake Canyon Grocery'), ('USA', 'Split Rail Beer & Ale'), ('USA', "Trail's Head Gourmet Provisioners"), ('Venezuela', 'LILA-Supermercado'), ('Sweden', 'Folk och fä HB'), ('Germany', 'Drachenblut Delikatessen'), ('France', 'Blondesddsl père et fils'), ('France', "Bon app'"), ('Argentina', 'Rancho grande'), ('UK', 'Island Trading'), ('Brazil', 'Tradição Hipermercados'), ('Norway', 'Santé Gourmet'), ('France', "La maison d'Asie"), ('Germany', 'Ottilies Käseladen'), ('Brazil', 'Tradição Hipermercados'), ('Germany', 'Alfreds Futterkiste'), ('Austria', 'Ernst Handel'), ('Sweden', 'Berglunds snabbköp'), ('Venezuela', 'LINO-Delicateses'), ('Brazil', 'Tradição Hipermercados'), ('Venezuela', 'LINO-Delicateses'), ('Belgium', 'Suprêmes délices'), ('Mexico', 'Tortuga Restaurante'), ('France', 'Victuailles en stock'), ('Austria', 'Piccolo und mehr'), ('Germany', 'QUICK-Stop'), ('Belgium', 'Suprêmes délices'), ('USA', 'Save-a-lot Markets'), ('UK', 'Consolidated Holdings'), ('Germany', 'Königlich Essen'), ('France', 'Victuailles en stock'), ('Brazil', 'Ricardo Adocicados'), ('USA', 'Rattlesnake Canyon Grocery'), ('Germany', 'Blauer See Delikatessen'), ('Austria', 'Ernst Handel'), ('USA', 'Old World Delicatessen'), ('Mexico', 'Antonio Moreno Taquería'), ('Sweden', 'Berglunds snabbköp'), ('France', "La corne d'abondance"), ('Germany', 'Frankenversand'), ('France', 'France restauration'), ('USA', 'White Clover Markets'), ('Germany', 'Lehmanns Marktstand'), ('Venezuela', 'HILARION-Abastos'), ('UK', 'Around the Horn'), ('Germany', 'QUICK-Stop'), ('Sweden', 'Berglunds snabbköp'), ('USA', 'Lonesome Pine Restaurant'), ('Brazil', 'Queen Cozinha'), ('UK', 'Seven Seas Imports'), ('Poland', 'Wolski  Zajazd'), ('France', "Bon app'"), ('Spain', 'Godos Cocina Típica'), ('Finland', 'Wilman Kala'), ('Spain', 'Godos Cocina Típica'), ('Sweden', 'Berglunds snabbköp'), ('France', "Bon app'"), ('Brazil', 'Ricardo Adocicados'), ('Germany', 'QUICK-Stop'), ('Finland', 'Wilman Kala'), ('Sweden', 'Folk och fä HB'), ('Argentina', 'Cactus Comidas para llevar'), ('USA', 'Save-a-lot Markets'), ('USA', 'Lonesome Pine Restaurant'), ('USA', "Let's Stop N Shop"), ('Belgium', 'Suprêmes délices'), ('Brazil', 'Hanari Carnes'), ('Spain', 'Galería del gastrónomo'), ('Spain', 'Godos Cocina Típica'), ('USA', 'Rattlesnake Canyon Grocery'), ('France', 'Du monde entier'), ('Germany', 'Lehmanns Marktstand'), ('Belgium', 'Maison Dewey'), ('Germany', 'Königlich Essen'), ('USA', 'Save-a-lot Markets'), ('Austria', 'Ernst Handel'), ('Belgium', 'Maison Dewey'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Argentina', 'Océano Atlántico Ltda.'), ('Venezuela', 'LILA-Supermercado'), ('Brazil', 'Wellington Importadora'), ('Venezuela', 'HILARION-Abastos'), ('Sweden', 'Folk och fä HB'), ('Brazil', 'Hanari Carnes'), ('USA', 'White Clover Markets'), ('Brazil', 'Wellington Importadora'), ('Poland', 'Wolski  Zajazd'), ('France', 'Spécialités du monde'), ('Italy', 'Reggiani Caseifici'), ('Norway', 'Santé Gourmet'), ('Finland', 'Wilman Kala'), ('Spain', 'Godos Cocina Típica'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Brazil', 'Queen Cozinha'), ('Brazil', 'Queen Cozinha'), ('Mexico', 'Tortuga Restaurante'), ('Argentina', 'Rancho grande'), ('Spain', 'Romero y tomillo'), ('Canada', 'Bottom-Dollar Markets'), ('Venezuela', 'LINO-Delicateses'), ('UK', 'Around the Horn'), ('Denmark', 'Vaffeljernet'), ('Brazil', 'Hanari Carnes'), ('France', "La maison d'Asie"), ('Sweden', 'Berglunds snabbköp'), ('Brazil', 'Hanari Carnes'), ('Mexico', 'Ana Trujillo Emparedados y helados'), ('France', "La corne d'abondance"), ('Spain', 'Galería del gastrónomo'), ('Germany', 'Frankenversand'), ('Belgium', 'Suprêmes délices'), ('Switzerland', 'Richter Supermarkt'), ('France', "Bon app'"), ('UK', 'Island Trading'), ('Germany', 'Lehmanns Marktstand'), ('Brazil', 'Wellington Importadora'), ('USA', 'Great Lakes Food Market'), ('Argentina', 'Cactus Comidas para llevar'), ('Germany', 'QUICK-Stop'), ('Italy', 'Magazzini Alimentari Riuniti'), ('France', "Bon app'"), ('USA', 'Save-a-lot Markets'), ('Italy', 'Reggiani Caseifici'), ('UK', "B's Beverages"), ('Canada', 'Bottom-Dollar Markets'), ('Germany', 'Morgenstern Gesundkost'), ('Denmark', 'Vaffeljernet'), ('UK', "B's Beverages"), ('Spain', 'Godos Cocina Típica'), ('Canada', 'Bottom-Dollar Markets'), ('Italy', 'Magazzini Alimentari Riuniti'), ('Switzerland', 'Richter Supermarkt'), ('Germany', 'Alfreds Futterkiste'), ('UK', 'Around the Horn'), ('Venezuela', 'LINO-Delicateses'), ('Sweden', 'Folk och fä HB'), ('Germany', 'Blauer See Delikatessen'), ('Venezuela', 'HILARION-Abastos'), ('Argentina', 'Océano Atlántico Ltda.'), ('Brazil', 'Gourmet Lanchonetes'), ('Venezuela', 'HILARION-Abastos'), ('Brazil', 'Queen Cozinha'), ('Germany', 'QUICK-Stop'), ('Portugal', 'Furia Bacalhau e Frutos do Mar'), ('France', 'Spécialités du monde'), ('USA', 'Old World Delicatessen'), ('Switzerland', 'Chop-suey Chinese'), ('Germany', 'Toms Spezialitäten'), ('Austria', 'Ernst Handel'), ('Brazil', 'Comércio Mineiro'), ('Spain', 'Bólido Comidas preparadas'), ('France', 'France restauration'), ('France', "La corne d'abondance"), ('France', "La corne d'abondance"), ('USA', 'Split Rail Beer & Ale'), ('Canada', 'Bottom-Dollar Markets'), ('Venezuela', 'HILARION-Abastos'), ('Sweden', 'Folk och fä HB'), ('Belgium', 'Maison Dewey'), ('Austria', 'Ernst Handel'), ('Sweden', 'Folk och fä HB'), ('Brazil', 'Hanari Carnes'), ('Canada', 'Bottom-Dollar Markets'), ('USA', 'Save-a-lot Markets'), ('USA', 'Save-a-lot Markets'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('Argentina', 'Océano Atlántico Ltda.'), ('UK', 'Eastern Connection'), ('USA', 'Rattlesnake Canyon Grocery'), ('Brazil', 'Que Delícia'), ('Austria', 'Ernst Handel'), ('Germany', 'QUICK-Stop'), ('USA', 'The Big Cheese'), ('Sweden', 'Folk och fä HB'), ('Denmark', 'Vaffeljernet'), ('Mexico', 'Pericles Comidas clásicas'), ('Germany', 'QUICK-Stop'), ('Venezuela', 'LILA-Supermercado'), ('Poland', 'Wolski  Zajazd'), ('Germany', 'Ottilies Käseladen'), ('USA', 'Rattlesnake Canyon Grocery'), ('Sweden', 'Folk och fä HB'), ('USA', 'Save-a-lot Markets'), ('USA', 'The Cracker Box'), ('Belgium', 'Maison Dewey'), ('Finland', 'Wilman Kala'), ('USA', 'Great Lakes Food Market'), ('Portugal', 'Princesa Isabel Vinhos'), ('Austria', 'Ernst Handel'), ('Spain', 'Godos Cocina Típica'), ('Italy', 'Reggiani Caseifici'), ('Germany', 'Alfreds Futterkiste'), ('Germany', 'Frankenversand'), ('Spain', 'Romero y tomillo'), ('Venezuela', 'LINO-Delicateses'), ('Norway', 'Santé Gourmet'), ('UK', 'Around the Horn'), ('Austria', 'Ernst Handel'), ('USA', 'Lonesome Pine Restaurant'), ('Argentina', 'Rancho grande'), ('Germany', 'Ottilies Käseladen'), ('Germany', 'QUICK-Stop'), ('Brazil', 'Hanari Carnes'), ('UK', "B's Beverages"), ('UK', 'Eastern Connection'), ('Finland', 'Wartian Herkku'), ('Italy', 'Franchi S.p.A.'), ('Canada', 'Bottom-Dollar Markets'), ('Germany', 'Königlich Essen'), ('Switzerland', 'Chop-suey Chinese'), ('USA', 'Save-a-lot Markets'), ('USA', 'Save-a-lot Markets'), ('USA', 'White Clover Markets'), ('Switzerland', 'Richter Supermarkt'), ('USA', 'Old World Delicatessen'), ('Belgium', 'Suprêmes délices'), ('Germany', 'Drachenblut Delikatessen'), ('Spain', 'Godos Cocina Típica'), ('Belgium', 'Suprêmes délices'), ('Venezuela', 'LINO-Delicateses'), ('USA', 'Great Lakes Food Market'), ('Switzerland', 'Chop-suey Chinese'), ('Brazil', 'Comércio Mineiro'), ('France', 'Spécialités du monde'), ('Poland', 'Wolski  Zajazd'), ('Canada', 'Bottom-Dollar Markets'), ('Germany', 'Die Wandernde Kuh'), ('UK', 'Eastern Connection'), ('Canada', 'Bottom-Dollar Markets'), ('Brazil', 'Gourmet Lanchonetes'), ('Sweden', 'Folk och fä HB'), ('France', "La maison d'Asie"), ('Brazil', 'Hanari Carnes'), ('Austria', 'Piccolo und mehr'), ('Argentina', 'Cactus Comidas para llevar'), ('Venezuela', 'HILARION-Abastos'), ('UK', 'Eastern Connection'), ('UK', 'North/South'), ('Germany', 'Blauer See Delikatessen'), ('Brazil', 'Ricardo Adocicados'), ('Italy', 'Franchi S.p.A.'), ('USA', 'Great Lakes Food Market'), ('Italy', 'Reggiani Caseifici'), ('Ireland', 'Hungry Owl All-Night Grocers'), ('USA', 'Save-a-lot Markets'), ('Venezuela', 'LILA-Supermercado'), ('USA', 'White Clover Markets'), ('Germany', 'Drachenblut Delikatessen'), ('Brazil', 'Queen Cozinha'), ('Mexico', 'Tortuga Restaurante'), ('Germany', 'Lehmanns Marktstand'), ('Venezuela', 'LILA-Supermercado'), ('Austria', 'Ernst Handel'), ('Mexico', 'Pericles Comidas clásicas'), ('Denmark', 'Simons bistro'), ('Switzerland', 'Richter Supermarkt'), ('France', "Bon app'"), ('USA', 'Rattlesnake Canyon Grocery')]
+    Status: ✅ Success
+    Tokens: total=1102  input=1056  output=46
+------------------------------------------------------------
+
+[8] Q: พนักงานคนไหนดูแลลูกค้าจากหลายประเทศมากที่สุด
+    Retrieved: customers, employees, orders, suppliers, customer_customer_demo
+    SQL:
+SELECT
+  e.first_name,
+  e.last_name
+FROM employees AS e
+JOIN orders AS o
+  ON e.employee_id = o.employee_id
+GROUP BY
+  e.employee_id,
+  e.first_name,
+  e.last_name
+ORDER BY
+  COUNT(DISTINCT o.customer_id) DESC
+LIMIT 1;
+    Result: [('Margaret', 'Peacock')]
+    Status: ✅ Success
+    Tokens: total=1375  input=1283  output=92
+------------------------------------------------------------
+
+[9] Q: บริษัทขนส่งเจ้าไหนมีระยะเวลาจัดส่งเฉลี่ยช้าที่สุด
+    Retrieved: shippers, orders, suppliers, products, order_details
+    SQL:
+SELECT
+  s.company_name
+FROM orders AS o
+JOIN shippers AS s
+  ON o.ship_via = s.shipper_id
+WHERE
+  o.shipped_date IS NOT NULL
+GROUP BY
+  s.company_name
+ORDER BY
+  AVG(o.shipped_date::date - o.order_date::date) DESC
+LIMIT 1;
+    Result: [('United Package',)]
+    Status: ✅ Success
+    Tokens: total=1145  input=1054  output=91
+------------------------------------------------------------
+
+[10] Q: มีลูกค้าคนไหนบ้างที่สั่งสินค้าชิ้นเดิมซ้ำมากกว่า 3 ครั้ง
+    Retrieved: orders, customers, order_details, products, shippers
+    SQL:
+SELECT
+  c.company_name
+FROM customers AS c
+JOIN orders AS o
+  ON c.customer_id = o.customer_id
+JOIN order_details AS od
+  ON o.order_id = od.order_id
+GROUP BY
+  c.company_name,
+  od.product_id
+HAVING
+  COUNT(od.product_id) > 3;
+    Result: [('Ernst Handel',), ('Ernst Handel',), ('Ernst Handel',), ('Rattlesnake Canyon Grocery',), ('Save-a-lot Markets',), ('QUICK-Stop',), ('Rattlesnake Canyon Grocery',), ('Vaffeljernet',), ('Save-a-lot Markets',), ('Save-a-lot Markets',), ('Ernst Handel',), ('Rattlesnake Canyon Grocery',), ('QUICK-Stop',), ('Save-a-lot Markets',), ('Save-a-lot Markets',), ('Hungry Owl All-Night Grocers',)]
+    Status: ✅ Success
+    Tokens: total=1139  input=1046  output=93
+------------------------------------------------------------
+
+[11] Q: คำสั่งซื้อที่ยังไม่ได้ส่งมีของลูกค้าคนไหนบ้าง
+    Retrieved: orders, customers, shippers, suppliers, employees
+    SQL:
+SELECT DISTINCT
+  c.customer_id,
+  c.company_name
+FROM customers AS c
+JOIN orders AS o
+  ON c.customer_id = o.customer_id
+WHERE
+  o.shipped_date IS NULL;
+    Result: [('REGGC', 'Reggiani Caseifici'), ('ERNSH', 'Ernst Handel'), ('RICAR', 'Ricardo Adocicados'), ('LEHMS', 'Lehmanns Marktstand'), ('SIMOB', 'Simons bistro'), ('LILAS', 'LILA-Supermercado'), ('LAMAI', "La maison d'Asie"), ('BOTTM', 'Bottom-Dollar Markets'), ('RANCH', 'Rancho grande'), ('PERIC', 'Pericles Comidas clásicas'), ('RICSU', 'Richter Supermarkt'), ('LINOD', 'LINO-Delicateses'), ('BONAP', "Bon app'"), ('BLAUS', 'Blauer See Delikatessen'), ('CACTU', 'Cactus Comidas para llevar'), ('GREAL', 'Great Lakes Food Market'), ('RATTC', 'Rattlesnake Canyon Grocery'), ('QUEEN', 'Queen Cozinha')]
+    Status: ✅ Success
+    Tokens: total=1330  input=1271  output=59
+------------------------------------------------------------
+
+[12] Q: ในแต่ละภูมิภาคมีพนักงานคนไหนรับผิดชอบอยู่บ้าง
+    Retrieved: region, territories, employee_territories, employees, orders
+    SQL:
+SELECT
+  r.region_description,
+  e.first_name,
+  e.last_name
+FROM region AS r
+JOIN territories AS t
+  ON r.region_id = t.region_id
+JOIN employee_territories AS et
+  ON t.territory_id = et.territory_id
+JOIN employees AS e
+  ON et.employee_id = e.employee_id
+ORDER BY
+  r.region_description,
+  e.last_name,
+  e.first_name;
+    Result: [('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Steven', 'Buchanan'), ('Eastern', 'Nancy', 'Davolio'), ('Eastern', 'Nancy', 'Davolio'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Andrew', 'Fuller'), ('Eastern', 'Margaret', 'Peacock'), ('Eastern', 'Margaret', 'Peacock'), ('Eastern', 'Margaret', 'Peacock'), ('Northern', 'Laura', 'Callahan'), ('Northern', 'Laura', 'Callahan'), ('Northern', 'Laura', 'Callahan'), ('Northern', 'Laura', 'Callahan'), ('Northern', 'Anne', 'Dodsworth'), ('Northern', 'Anne', 'Dodsworth'), ('Northern', 'Anne', 'Dodsworth'), ('Northern', 'Anne', 'Dodsworth'), ('Northern', 'Anne', 'Dodsworth'), ('Southern', 'Janet', 'Leverling'), ('Southern', 'Janet', 'Leverling'), ('Southern', 'Janet', 'Leverling'), ('Southern', 'Janet', 'Leverling')]
+    Status: ✅ Success
+    Tokens: total=1116  input=993  output=123
+------------------------------------------------------------
+
+[13] Q: พนักงานแต่ละคนรับคำสั่งซื้อล่าสุดเมื่อวันที่เท่าไร
+    Retrieved: orders, employees, customers, suppliers, shippers
+    SQL:
+SELECT
+  e.first_name,
+  e.last_name,
+  MAX(o.order_date) AS latest_order_date
+FROM employees AS e
+JOIN orders AS o
+  ON e.employee_id = o.employee_id
+GROUP BY
+  e.employee_id,
+  e.first_name,
+  e.last_name
+ORDER BY
+  latest_order_date DESC;
+    Result: [('Robert', 'King', datetime.date(1998, 5, 6)), ('Laura', 'Callahan', datetime.date(1998, 5, 6)), ('Margaret', 'Peacock', datetime.date(1998, 5, 6)), ('Nancy', 'Davolio', datetime.date(1998, 5, 6)), ('Andrew', 'Fuller', datetime.date(1998, 5, 5)), ('Janet', 'Leverling', datetime.date(1998, 4, 30)), ('Anne', 'Dodsworth', datetime.date(1998, 4, 29)), ('Michael', 'Suyama', datetime.date(1998, 4, 23)), ('Steven', 'Buchanan', datetime.date(1998, 4, 22))]
+    Status: ✅ Success
+    Tokens: total=1371  input=1271  output=100
+------------------------------------------------------------
+
+[14] Q: สินค้าที่ยังจำหน่ายอยู่มีอะไรบ้าง พร้อมชื่อหมวดหมู่และคำอธิบาย
+    Retrieved: catarories, products, customers, suppliers, territories
+    SQL:
+SELECT
+  p.product_name,
+  c.category_name,
+  c.description
+FROM products AS p
+JOIN categories AS c
+  ON p.category_id = c.category_id
+WHERE
+  p.discontinued = 0;
+    Result: [('Aniseed Syrup', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ("Chef Anton's Cajun Seasoning", 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ("Grandma's Boysenberry Spread", 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ("Uncle Bob's Organic Dried Pears", 'Produce', 'Dried fruit and bean curd'), ('Northwoods Cranberry Sauce', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Ikura', 'Seafood', 'Seaweed and fish'), ('Queso Cabrales', 'Dairy Products', 'Cheeses'), ('Queso Manchego La Pastora', 'Dairy Products', 'Cheeses'), ('Konbu', 'Seafood', 'Seaweed and fish'), ('Tofu', 'Produce', 'Dried fruit and bean curd'), ('Genen Shouyu', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Pavlova', 'Confections', 'Desserts, candies, and sweet breads'), ('Carnarvon Tigers', 'Seafood', 'Seaweed and fish'), ('Teatime Chocolate Biscuits', 'Confections', 'Desserts, candies, and sweet breads'), ("Sir Rodney's Marmalade", 'Confections', 'Desserts, candies, and sweet breads'), ("Sir Rodney's Scones", 'Confections', 'Desserts, candies, and sweet breads'), ("Gustaf's Knäckebröd", 'Grains/Cereals', 'Breads, crackers, pasta, and cereal'), ('Tunnbröd', 'Grains/Cereals', 'Breads, crackers, pasta, and cereal'), ('NuNuCa Nuß-Nougat-Creme', 'Confections', 'Desserts, candies, and sweet breads'), ('Gumbär Gummibärchen', 'Confections', 'Desserts, candies, and sweet breads'), ('Schoggi Schokolade', 'Confections', 'Desserts, candies, and sweet breads'), ('Nord-Ost Matjeshering', 'Seafood', 'Seaweed and fish'), ('Gorgonzola Telino', 'Dairy Products', 'Cheeses'), ('Mascarpone Fabioli', 'Dairy Products', 'Cheeses'), ('Geitost', 'Dairy Products', 'Cheeses'), ('Sasquatch Ale', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Steeleye Stout', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Inlagd Sill', 'Seafood', 'Seaweed and fish'), ('Gravad lax', 'Seafood', 'Seaweed and fish'), ('Côte de Blaye', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Chartreuse verte', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Boston Crab Meat', 'Seafood', 'Seaweed and fish'), ("Jack's New England Clam Chowder", 'Seafood', 'Seaweed and fish'), ('Ipoh Coffee', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Gula Malacca', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Rogede sild', 'Seafood', 'Seaweed and fish'), ('Spegesild', 'Seafood', 'Seaweed and fish'), ('Zaanse koeken', 'Confections', 'Desserts, candies, and sweet breads'), ('Chocolade', 'Confections', 'Desserts, candies, and sweet breads'), ('Maxilaku', 'Confections', 'Desserts, candies, and sweet breads'), ('Valkoinen suklaa', 'Confections', 'Desserts, candies, and sweet breads'), ('Manjimup Dried Apples', 'Produce', 'Dried fruit and bean curd'), ('Filo Mix', 'Grains/Cereals', 'Breads, crackers, pasta, and cereal'), ('Tourtière', 'Meat/Poultry', 'Prepared meats'), ('Pâté chinois', 'Meat/Poultry', 'Prepared meats'), ('Gnocchi di nonna Alice', 'Grains/Cereals', 'Breads, crackers, pasta, and cereal'), ('Ravioli Angelo', 'Grains/Cereals', 'Breads, crackers, pasta, and cereal'), ('Escargots de Bourgogne', 'Seafood', 'Seaweed and fish'), ('Raclette Courdavault', 'Dairy Products', 'Cheeses'), ('Camembert Pierrot', 'Dairy Products', 'Cheeses'), ("Sirop d'érable", 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Tarte au sucre', 'Confections', 'Desserts, candies, and sweet breads'), ('Vegie-spread', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Wimmers gute Semmelknödel', 'Grains/Cereals', 'Breads, crackers, pasta, and cereal'), ('Louisiana Fiery Hot Pepper Sauce', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Louisiana Hot Spiced Okra', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings'), ('Laughing Lumberjack Lager', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Scottish Longbreads', 'Confections', 'Desserts, candies, and sweet breads'), ('Gudbrandsdalsost', 'Dairy Products', 'Cheeses'), ('Outback Lager', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Flotemysost', 'Dairy Products', 'Cheeses'), ('Mozzarella di Giovanni', 'Dairy Products', 'Cheeses'), ('Röd Kaviar', 'Seafood', 'Seaweed and fish'), ('Longlife Tofu', 'Produce', 'Dried fruit and bean curd'), ('Rhönbräu Klosterbier', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Lakkalikööri', 'Beverages', 'Soft drinks, coffees, teas, beers, and ales'), ('Original Frankfurter grüne Soße', 'Condiments', 'Sweet and savory sauces, relishes, spreads, and seasonings')]
+    Status: ✅ Success
+    Tokens: total=964  input=901  output=63
+------------------------------------------------------------
+
+[15] Q: ลูกค้าจากประเทศเยอรมนีนิยมซื้อสินค้าอะไรมากที่สุด
+    Retrieved: customers, orders, products, suppliers, customer_demographics
+    SQL:
+SELECT
+  p.product_name
+FROM customers AS c
+JOIN orders AS o
+  ON c.customer_id = o.customer_id
+JOIN order_details AS od
+  ON o.order_id = od.order_id
+JOIN products AS p
+  ON od.product_id = p.product_id
+WHERE
+  c.country = 'Germany'
+GROUP BY
+  p.product_name
+ORDER BY
+  COUNT(p.product_id) DESC
+LIMIT 1;
+    Result: [('Gorgonzola Telino',)]
+    Status: ✅ Success
+    Tokens: total=1200  input=1083  output=117
+------------------------------------------------------------
+
+[16] Q: บริษัทขนส่งเจ้าไหนถูกใช้ส่งสินค้าให้ลูกค้ามากที่สุด
+    Retrieved: shippers, orders, suppliers, customers, products
+    SQL:
+SELECT
+  s.company_name
+FROM shippers AS s
+JOIN orders AS o
+  ON s.shipper_id = o.ship_via
+GROUP BY
+  s.company_name
+ORDER BY
+  COUNT(o.order_id) DESC
+LIMIT 1;
+    Result: [('United Package',)]
+    Status: ✅ Success
+    Tokens: total=1191  input=1124  output=67
+------------------------------------------------------------
+
+[17] Q: มีคำสั่งซื้อรายการใดบ้างที่มีค่าขนส่งสูงแต่ส่งล่าช้า
+    Retrieved: orders, shippers, products, order_details, customers
+    SQL:
+SELECT
+  order_id
+FROM orders
+WHERE
+  shipped_date > required_date AND freight > (
+    SELECT
+      AVG(freight)
+    FROM orders
+  );
+    Result: [(10451,), (10515,), (10593,), (10660,), (10663,), (10687,), (10709,), (10727,), (10816,), (10828,), (10847,), (10924,)]
+    Status: ✅ Success
+    Tokens: total=1093  input=1046  output=47
+------------------------------------------------------------
+
+[18] Q: บริษัทขนส่งเจ้าไหนขนส่งสินค้าหมวดผลิตภัณฑ์นมมากที่สุด
+    Retrieved: shippers, orders, products, suppliers, catarories
+    SQL:
+SELECT
+  s.company_name
+FROM shippers AS s
+JOIN orders AS o
+  ON s.shipper_id = o.ship_via
+JOIN order_details AS od
+  ON o.order_id = od.order_id
+JOIN products AS p
+  ON od.product_id = p.product_id
+JOIN categories AS c
+  ON p.category_id = c.category_id
+WHERE
+  c.category_name = 'Dairy Products'
+GROUP BY
+  s.company_name
+ORDER BY
+  COUNT(od.order_id) DESC
+LIMIT 1;
+    Result: [('United Package',)]
+    Status: ✅ Success
+    Tokens: total=1120  input=980  output=140
+------------------------------------------------------------
+
+[19] Q: ลูกค้าคนไหนได้รับสินค้าช้ากว่ากำหนดมากที่สุด และใช้บริษัทขนส่งเจ้าไหน
+    Retrieved: shippers, orders, customers, suppliers, products
+    SQL:
+SELECT
+  c.company_name AS customer_company,
+  s.company_name AS shipper_company,
+  MAX(o.shipped_date - o.required_date) AS days_late
+FROM orders AS o
+JOIN customers AS c
+  ON o.customer_id = c.customer_id
+JOIN shippers AS s
+  ON o.ship_via = s.shipper_id
+WHERE
+  o.shipped_date > o.required_date
+GROUP BY
+  c.company_name,
+  s.company_name
+ORDER BY
+  days_late DESC
+LIMIT 1;
+    Result: [('Gourmet Lanchonetes', 'United Package', 23)]
+    Status: ✅ Success
+    Tokens: total=1273  input=1130  output=143
+------------------------------------------------------------
+
+[20] Q: มีสินค้าอะไรบ้างที่ถูกสั่งซื้อมากกว่า 100 หน่วยในคำสั่งซื้อครั้งเดียว
+    Retrieved: order_details, products, customers, orders, catarories
+    SQL:
+SELECT
+  p.product_name
+FROM products AS p
+JOIN order_details AS od
+  ON p.product_id = od.product_id
+WHERE
+  od.quantity > 100;
+    Result: [('Pâté chinois',), ('Pâté chinois',), ('Schoggi Schokolade',), ("Sirop d'érable",), ("Jack's New England Clam Chowder",), ('Perth Pasties',), ('Rogede sild',), ('Chartreuse verte',), ('Manjimup Dried Apples',), ('Rhönbräu Klosterbier',), ('Guaraná Fantástica',), ('Raclette Courdavault',), ('Wimmers gute Semmelknödel',)]
+    Status: ✅ Success
+    Tokens: total=1077  input=1025  output=52
+------------------------------------------------------------
+
+[21] Q: พนักงานแต่ละคนรับผิดชอบพื้นที่การทำงานใดบ้าง
+    Retrieved: territories, employee_territories, region, employees, orders
+    SQL:
+SELECT
+  e.first_name,
+  e.last_name,
+  t.territory_description
+FROM employees AS e
+JOIN employee_territories AS et
+  ON e.employee_id = et.employee_id
+JOIN territories AS t
+  ON et.territory_id = t.territory_id;
+    Result: [('Andrew', 'Fuller', 'Westboro'), ('Andrew', 'Fuller', 'Bedford'), ('Andrew', 'Fuller', 'Georgetow'), ('Andrew', 'Fuller', 'Boston'), ('Andrew', 'Fuller', 'Cambridge'), ('Andrew', 'Fuller', 'Braintree'), ('Steven', 'Buchanan', 'Providence'), ('Anne', 'Dodsworth', 'Hollis'), ('Anne', 'Dodsworth', 'Portsmouth'), ('Nancy', 'Davolio', 'Wilton'), ('Steven', 'Buchanan', 'Morristown'), ('Steven', 'Buchanan', 'Edison'), ('Steven', 'Buchanan', 'New York'), ('Steven', 'Buchanan', 'New York'), ('Steven', 'Buchanan', 'Mellvile'), ('Steven', 'Buchanan', 'Fairport'), ('Laura', 'Callahan', 'Philadelphia'), ('Nancy', 'Davolio', 'Neward'), ('Margaret', 'Peacock', 'Rockville'), ('Margaret', 'Peacock', 'Greensboro'), ('Margaret', 'Peacock', 'Cary'), ('Janet', 'Leverling', 'Atlanta'), ('Janet', 'Leverling', 'Savannah'), ('Janet', 'Leverling', 'Orlando'), ('Janet', 'Leverling', 'Tampa'), ('Andrew', 'Fuller', 'Louisville'), ('Laura', 'Callahan', 'Beachwood'), ('Laura', 'Callahan', 'Findlay'), ('Anne', 'Dodsworth', 'Southfield'), ('Anne', 'Dodsworth', 'Troy'), ('Anne', 'Dodsworth', 'Bloomfield Hills'), ('Laura', 'Callahan', 'Racine')]
+    Status: ✅ Success
+    Tokens: total=1070  input=991  output=79
+------------------------------------------------------------
+
+Summary
+  Total questions : 21
+  Success         : 21
+  Failed          : 0
+  Accuracy        : 100.0%
+  Total tokens    : 24224
+  Avg tokens/Q    : 1153
