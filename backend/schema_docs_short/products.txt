@@ -1,0 +1,13 @@
+Table:products
+Description: ข้อมูลสินค้าที่จำหน่าย
+Columns:
+  product_id        SMALLINT PRIMARY KEY,                        -- รหัสสินค้า
+  product_name      VARCHAR(40) NOT NULL,                        -- ชื่อสินค้า
+  supplier_id       SMALLINT REFERENCES suppliers(supplier_id),  -- FK → suppliers: บริษัทที่จัดหาสินค้า
+  category_id       SMALLINT REFERENCES categories(category_id), -- FK → categories: หมวดหมู่สินค้า
+  quantity_per_unit VARCHAR(20),                                  -- หน่วยบรรจุ เช่น "10 boxes x 20 bags"
+  unit_price        REAL,                                        -- ราคาต่อหน่วย
+  units_in_stock    SMALLINT,                                    -- จำนวนสินค้าคงคลัง
+  units_on_order    SMALLINT,                                    -- จำนวนที่กำลังสั่งซื้อเพิ่ม
+  reorder_level     SMALLINT,                                    -- จำนวนขั้นต่ำที่ต้องสั่งซื้อเพิ่ม
+  discontinued      INTEGER NOT NULL    

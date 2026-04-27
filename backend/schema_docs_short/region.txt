@@ -1,0 +1,5 @@
+Table:region
+Description:ภูมิภาคการทำงาน
+Columns:
+  region_id          SMALLINT PRIMARY KEY, -- รหัส work region
+  region_description VARCHAR(60) NOT NULL  -- ชื่อ work region เช่น Eastern, Western, Northern, Southern

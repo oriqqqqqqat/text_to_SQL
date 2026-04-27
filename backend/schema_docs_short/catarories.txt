@@ -1,0 +1,7 @@
+Table:categories
+Description:หมวดหมู่สินค้า
+Columns:
+  category_id   INTEGER PRIMARY KEY,  -- รหัส category
+  category_name VARCHAR(15) NOT NULL, -- ชื่อ category เช่น Beverages, Seafood
+  description   TEXT,                 -- คำอธิบาย category
+  picture       BYTEA                 -- รูปภาพ category

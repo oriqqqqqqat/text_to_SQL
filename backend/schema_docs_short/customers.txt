@@ -1,0 +1,14 @@
+Table:customers
+Description:ข้อมูลลูกค้า (customer) ที่สั่งซื้อสินค้า
+cloumn:
+  customer_id   VARCHAR(5) PRIMARY KEY, -- รหัสลูกค้า (5 ตัวอักษร เช่น ALFKI)
+  company_name  VARCHAR(40) NOT NULL,   -- ชื่อบริษัทลูกค้า
+  contact_name  VARCHAR(30),            -- ชื่อผู้ติดต่อ
+  contact_title VARCHAR(30),            -- ตำแหน่งผู้ติดต่อ
+  address       VARCHAR(60),            -- ที่อยู่ลูกค้า
+  city          VARCHAR(15),            -- เมืองที่ตั้ง
+  region        VARCHAR(15),            -- ภูมิภาคที่ตั้ง (ที่อยู่จริง ไม่ใช่ work region)
+  postal_code   VARCHAR(10),            -- รหัสไปรษณีย์
+  country       VARCHAR(15),            -- ประเทศของลูกค้า
+  phone         VARCHAR(24),            -- เบอร์โทรศัพท์
+  fax           VARCHAR(24)             -- เบอร์แฟกซ์
