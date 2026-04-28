@@ -1,0 +1,34 @@
+Text-to-SQL Results (RAG)
+Schema : schema_embeddings_short (pgvector)
+Top-k  : 5
+Model  : models/gemini-2.5-flash
+Date   : 2026-04-26 23:09:25
+============================================================
+
+[1] Q: บริษัทขนส่งใดมีค่าเฉลี่ยการจัดส่งล่าช้ามากที่สุด
+    Retrieved: shippers, orders, suppliers, products, customers
+    SQL:
+SELECT
+  s.company_name
+FROM orders AS o
+JOIN shippers AS s
+  ON o.ship_via = s.shipper_id
+WHERE
+  o.shipped_date IS NOT NULL AND o.shipped_date > o.required_date
+GROUP BY
+  s.company_name
+ORDER BY
+  AVG(o.shipped_date - o.required_date) DESC
+LIMIT 1;
+    Result: [('Speedy Express',)]
+    Status: ✅ Success
+    Tokens: total=1253  input=1158  output=95
+------------------------------------------------------------
+
+Summary
+  Total questions : 1
+  Success         : 1
+  Failed          : 0
+  Accuracy        : 100.0%
+  Total tokens    : 1253
+  Avg tokens/Q    : 1253

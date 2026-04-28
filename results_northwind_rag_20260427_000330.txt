@@ -1,0 +1,35 @@
+Text-to-SQL Results (RAG)
+Schema : schema_embeddings_short (pgvector)
+Top-k  : 5
+Model  : models/gemini-2.5-flash
+Date   : 2026-04-27 00:03:30
+============================================================
+
+[1] Q: ลูกค้าคนใดสั่งซื้อสินค้าชนิดเดิมซ้ำมากกว่า 3 ครั้ง
+    Retrieved: customers, orders, customer_demographics, products, customer_customer_demo
+    SQL:
+SELECT
+  c.company_name
+FROM
+  customers AS c
+JOIN
+  orders AS o
+ON
+  c.customer_id = o.customer_id
+GROUP BY
+  c.customer_id,
+  c.company_name
+HAVING
+  COUNT(o.order_id) > 3;
+    Result: [('Toms Spezialitäten',), ('Lonesome Pine Restaurant',), ('Old World Delicatessen',), ('Wartian Herkku',), ('Magazzini Alimentari Riuniti',), ('Queen Cozinha',), ('Vins et alcools Chevalier',), ('Antonio Moreno Taquería',), ('Morgenstern Gesundkost',), ('Gourmet Lanchonetes',), ('Wolski  Zajazd',), ('Galería del gastrónomo',), ('Rattlesnake Canyon Grocery',), ('Wellington Importadora',), ('Wilman Kala',), ('Furia Bacalhau e Frutos do Mar',), ('Du monde entier',), ('Frankenversand',), ('Familia Arquibaldo',), ('Tortuga Restaurante',), ('Franchi S.p.A.',), ('Princesa Isabel Vinhos',), ('Rancho grande',), ('Pericles Comidas clásicas',), ('Island Trading',), ('Lehmanns Marktstand',), ('Alfreds Futterkiste',), ('Victuailles en stock',), ('Ricardo Adocicados',), ('Folies gourmandes',), ('LINO-Delicateses',), ('Ana Trujillo Emparedados y helados',), ('QUICK-Stop',), ('The Big Cheese',), ('Chop-suey Chinese',), ("La corne d'abondance",), ('Hungry Owl All-Night Grocers',), ('Ottilies Käseladen',), ('Around the Horn',), ('Königlich Essen',), ('Mère Paillarde',), ('Blauer See Delikatessen',), ("Bon app'",), ('Santé Gourmet',), ('Drachenblut Delikatessen',), ('Godos Cocina Típica',), ("B's Beverages",), ('Hanari Carnes',), ('Seven Seas Imports',), ('Maison Dewey',), ('Berglunds snabbköp',), ('Folk och fä HB',), ('Split Rail Beer & Ale',), ('Cactus Comidas para llevar',), ('Océano Atlántico Ltda.',), ('Save-a-lot Markets',), ('Blondesddsl père et fils',), ("Let's Stop N Shop",), ('Vaffeljernet',), ('HILARION-Abastos',), ('Eastern Connection',), ('Piccolo und mehr',), ('Ernst Handel',), ('Spécialités du monde',), ('Romero y tomillo',), ('Suprêmes délices',), ('Comércio Mineiro',), ('Reggiani Caseifici',), ('Tradição Hipermercados',), ('Great Lakes Food Market',), ('Que Delícia',), ("La maison d'Asie",), ('Simons bistro',), ('Die Wandernde Kuh',), ('Hungry Coyote Import Store',), ('LILA-Supermercado',), ('White Clover Markets',), ('Richter Supermarkt',), ('Bottom-Dollar Markets',)]
+    Status: ✅ Success
+    Tokens: total=1069  input=997  output=72
+------------------------------------------------------------
+
+Summary
+  Total questions : 1
+  Success         : 1
+  Failed          : 0
+  Accuracy        : 100.0%
+  Total tokens    : 1069
+  Avg tokens/Q    : 1069

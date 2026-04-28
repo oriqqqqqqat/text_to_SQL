@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: text2sql-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: northwind
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: text2sql-backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      LOCAL_NORTHWIND_URL: postgresql://postgres:postgres@db:5432/northwind
+      LOCAL_ARDINE_URL: postgresql://postgres:postgres@db:5432/ardine
+      GEMINI_API_KEY: AIzaSyA6DgAMJFY-diMq5XypL-LeBHd9rpoDtRc
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    container_name: text2sql-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
