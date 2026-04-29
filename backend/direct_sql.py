@@ -6,7 +6,7 @@ from google import genai
 load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-MODEL_NAME = "models/gemini-2.5-flash-lite"
+MODEL_NAME = "models/gemini-2.5-flash"
 
 PROMPT_TEMPLATE = """You are a PostgreSQL expert.
 Use ONLY the database schema provided below.

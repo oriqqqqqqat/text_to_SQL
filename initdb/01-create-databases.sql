@@ -1,0 +1,2 @@
+CREATE DATABASE northwind;
+CREATE DATABASE ardine;

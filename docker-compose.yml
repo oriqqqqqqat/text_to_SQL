@@ -1,18 +1,17 @@
-version: "3.9"
-
 services:
   db:
-    image: postgres:16
+    image: pgvector/pgvector:pg17
     container_name: text2sql-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: northwind
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
 
   backend:
     build: ./backend
@@ -23,7 +22,7 @@ services:
     environment:
       LOCAL_NORTHWIND_URL: postgresql://postgres:postgres@db:5432/northwind
       LOCAL_ARDINE_URL: postgresql://postgres:postgres@db:5432/ardine
-      GEMINI_API_KEY: AIzaSyA6DgAMJFY-diMq5XypL-LeBHd9rpoDtRc
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     ports:
       - "8000:8000"
 
@@ -34,7 +33,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:3000"
+      - "3003:3000"
 
 volumes:
   postgres_data:
